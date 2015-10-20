@@ -48,6 +48,8 @@ public class Tab2 extends Fragment {
     Marker mMarker;
     private static View view;
 
+    LocationManager lm;
+
     double dis;
 //    public Tab2(){}
     @Nullable
@@ -61,6 +63,7 @@ public class Tab2 extends Fragment {
         }
         try {
             view= inflater.inflate(R.layout.tab_2,container,false);
+
         }catch (InflateException e){
             /* map is already there, just return view as it is */
         }
@@ -110,26 +113,26 @@ public class Tab2 extends Fragment {
         @Override
     public void onResume() {
         super.onResume();
-            GpsTracker gpsTracker = new GpsTracker(getActivity());
+//            GpsTracker gpsTracker = new GpsTracker(getActivity());
 //        mMapView.onResume();
-//            LatLng latLng = new LatLng(11.5565195, 104.9198001);
+            LatLng latLng = new LatLng(11.5565195, 104.9198001);
             if (mMap == null){
                 mMap = supportMapFragment.getMap();
-//                mMap.addMarker(new MarkerOptions().position(latLng).title("Brown"));
-//                CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
-//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                if (gpsTracker.canGetLocation()){
-                    LatLng latLng = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
-                    LatLng endP = new LatLng(11.5565195, 104.9198001);
-                    mMap.addMarker(new MarkerOptions().position(latLng).title("My location"));
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                    dis = CalculationByDistance(latLng,endP);
-                    Toast.makeText(getActivity(),"Dis : "+ dis,Toast.LENGTH_LONG).show();
-                }
-                else {
-                    gpsTracker.showSettingsAlert();
-                }
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Brown"));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                if (gpsTracker.canGetLocation()){
+//                    LatLng latLng = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
+//                    LatLng endP = new LatLng(11.5565195, 104.9198001);
+//                    mMap.addMarker(new MarkerOptions().position(latLng).title("My location"));
+//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
+//                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//                    dis = CalculationByDistance(latLng,endP);
+//                    Toast.makeText(getActivity(),"Dis : "+ dis,Toast.LENGTH_LONG).show();
+//                }
+//                else {
+//                    gpsTracker.showSettingsAlert();
+//                }
             }
 
     }
@@ -170,4 +173,15 @@ public class Tab2 extends Fragment {
 //        super.onDestroy();
 //        mMapView.onDestroy();
 //    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 0).show();
+            return false;
+        }
+    }
+
 }
