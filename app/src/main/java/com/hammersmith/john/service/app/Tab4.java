@@ -224,6 +224,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                     progressDialog = new ProgressDialog(getActivity());
                     progressDialog.setIndeterminate(true);
                     progressDialog.setMessage("Authenticating...");
+                    progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.show();
                 }
             }
