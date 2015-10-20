@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/ColorPrimary</item>
+        <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
+        <item name="textAppearanceSearchResultTitle">@style/SearchResultTitle</item>
+        <item name="textAppearanceSearchResultSubtitle">@style/SearchResultSubtitle</item>
+    </style>
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">#0000FF</item>
+    </style>
+
+    <style name="Theme.MyTheme.Light.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <style name="HeaderTitleStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!--  Style GridView -->
+
+    <style name="PhotoGrid">
+        <item name="android:drawSelectorOnTop">true</item>
+        <item name="android:listSelector">@drawable/grid_selector</item>
+    </style>
+
+    <style name="SearchResultTitle" parent="@style/TextAppearance.AppCompat.SearchResult.Title">
+        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+    </style>
+
+    <style name="SearchResultSubtitle" parent="@style/TextAppearance.AppCompat.SearchResult.Subtitle">
+        <item name="android:textColor">?android:attr/textColorSecondaryInverse</item>
+    </style>
+
+</resources>

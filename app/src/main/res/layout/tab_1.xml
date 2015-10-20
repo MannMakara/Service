@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!--<GridView-->
+        <!--android:id="@+id/grid"-->
+        <!--style="@style/PhotoGrid"-->
+        <!--android:columnWidth="120dp"-->
+        <!--android:numColumns="auto_fit"-->
+        <!--android:horizontalSpacing="@dimen/photo_spacing"-->
+        <!--android:verticalSpacing="@dimen/photo_spacing"-->
+        <!--android:padding="2dp"-->
+        <!--android:scrollbars="none"-->
+        <!--android:stretchMode="columnWidth"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"/>-->
+
+    <!--<android.support.v7.widget.CardView-->
+        <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--card_view:cardCornerRadius="4dp"-->
+        <!--card_view:cardElevation="4dp">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:paddingLeft="10dp"-->
+                <!--android:id="@+id/spa"-->
+                <!--android:onClick="Showspa"-->
+                <!--android:textStyle="bold"-->
+                <!--android:text="Massage &amp; Spa"-->
+                <!--android:textColor="#000000"-->
+                <!--android:background="@drawable/massage1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+
+    <!--</android.support.v7.widget.CardView>-->
+
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<android.support.v7.widget.CardView-->
+            <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+            <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--card_view:cardBackgroundColor="#E6E6E6"-->
+            <!--card_view:cardCornerRadius="4dp"-->
+            <!--card_view:cardElevation="2dp">-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:id="@+id/resta"-->
+                    <!--android:onClick="ShowResta"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:text="Restaurants"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:background="@drawable/ketchup_sunset"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+        <!--</android.support.v7.widget.CardView>-->
+
+        <!--<android.support.v7.widget.CardView-->
+            <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+            <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--card_view:cardCornerRadius="4dp"-->
+            <!--card_view:cardElevation="2dp">-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content">-->
+                <!--<TextView-->
+                    <!--android:paddingLeft="10dp"-->
+                    <!--android:id="@+id/hotel"-->
+                    <!--android:onClick="ShowHotel"-->
+                    <!--android:textStyle="bold"-->
+                    <!--android:textColor="#ffffff"-->
+                    <!--android:background="@drawable/gym"-->
+                    <!--android:text="Gym"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</LinearLayout>-->
+        <!--</android.support.v7.widget.CardView>-->
+
+    <!--</LinearLayout>-->
+</LinearLayout>

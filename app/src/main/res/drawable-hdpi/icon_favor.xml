@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--When Selected use Red-->
+    <item
+        android:drawable="@drawable/ic_action_favorite_red"
+        android:state_selected="true"/>
+
+    <!-- Not select use white-->
+    <item
+        android:drawable="@drawable/ic_action_favorite"/>
+
+</selector>
