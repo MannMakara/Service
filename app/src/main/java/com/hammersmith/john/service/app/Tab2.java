@@ -114,7 +114,6 @@ public class Tab2 extends Fragment {
     public void onResume() {
         super.onResume();
 //            GpsTracker gpsTracker = new GpsTracker(getActivity());
-//        mMapView.onResume();
             LatLng latLng = new LatLng(11.5565195, 104.9198001);
             if (mMap == null){
                 mMap = supportMapFragment.getMap();
@@ -161,27 +160,4 @@ public class Tab2 extends Fragment {
 
         return Radius * c;
     }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        mMapView.onPause();
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        mMapView.onDestroy();
-//    }
-
-    private boolean isGooglePlayServicesAvailable() {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-        if (ConnectionResult.SUCCESS == status) {
-            return true;
-        } else {
-            GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 0).show();
-            return false;
-        }
-    }
-
 }

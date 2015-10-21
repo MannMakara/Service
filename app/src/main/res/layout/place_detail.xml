@@ -133,8 +133,7 @@
                 android:background="#FF909090"
                 android:padding="2dip" />
         </TableRow>
-        <TableRow
-            android:padding="10dp">
+        <TableRow android:padding="10dp">
             <ImageView
                 android:id="@+id/imgLocate"
                 android:layout_width="wrap_content"

@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Service</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Favorite</string>
     <string name="title_activity_spa">Massage &amp; Spa</string>
     <string name="title_activity_resta">Restaurants</string>
     <string name="title_activity_hotel">Gyms</string>
@@ -17,22 +16,7 @@
     <string name="title_activity_test_tab">TestTabActivity</string>
     <string name="title_activity_place">Place</string>
     <string name="title_activity_place_detail">PlaceDetailActivity</string>
-    <string name="detail">
 
-Community Size:Village\n
-Population:801 Adults\n
-Size:28.77 Acres\n
-Population Density (Adults/Acre):27.85 Adults/Acre\n
-Races:Human (737); Halfling (16); Elf (8); Dwarf (8);Gnome (8); Half Elf (8); Half Orc (8); Other (8)
-    </string>
-    <string name="fee">
-        Welcome to the Radisson Blu Hotel Indore, where guests are treated to exquisite accommodation
-        and an array of fine services like a rooftop spa and a health club, all while staying in the
-        heart of the commercial capital of Madhya Pradesh. Our hotel’s location in Indore offers convenient
-        access to the area’s top attractions, just a 20-minute drive from Devi Ahilyabai Holkar Airport.
-        Business travelers appreciate proximity to industrial towns Devas and Pithampur,
-        as well as the hotel’s two Business Class floors and the exclusive Business Class Lounge.
-    </string>
     <string name="title_hotel">
         Sokha Beach Resort
     </string>

@@ -80,6 +80,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
+
         mAdapter = new PlaceViewPager(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.view_pager);
         mPager.setAdapter(mAdapter);
@@ -113,11 +114,17 @@ public class PlaceDetailActivity extends AppCompatActivity {
             int id_detail = PlaceDetailActivity.placeID;
             place = new Place();
 
-            Bundle arguments = getArguments();
+//            Bundle arguments = getArguments();
             RecyclerView recyclerView = new RecyclerView(getActivity());
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setAdapter(new PlaceRecyclerAdapter(getActivity()));
             return recyclerView;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_place_detail,menu);
+        return true;
     }
 }
