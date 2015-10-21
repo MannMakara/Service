@@ -127,4 +127,15 @@ public class PlaceDetailActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_place_detail,menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_favor){
+            Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_SHORT).show();
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
