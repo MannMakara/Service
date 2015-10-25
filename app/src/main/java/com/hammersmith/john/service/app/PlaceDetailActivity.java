@@ -133,7 +133,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_favor){
             Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_SHORT).show();
-
+            item.setIcon(R.drawable.ic_action_favorite_red);
             return true;
         }
         return super.onOptionsItemSelected(item);

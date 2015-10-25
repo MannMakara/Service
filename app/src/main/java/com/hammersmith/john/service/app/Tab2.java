@@ -1,11 +1,5 @@
 package com.hammersmith.john.service.app;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,23 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.hammersmith.john.service.R;
-import com.hammersmith.john.service.gpsTracker.GpsTracker;
+import com.hammersmith.john.service.gpsTracker.GPSService;
 
 import java.text.DecimalFormat;
 
@@ -47,8 +34,7 @@ public class Tab2 extends Fragment {
     MapView mMapView;
     Marker mMarker;
     private static View view;
-
-    LocationManager lm;
+    GPSService mGPSService;
 
     double dis;
 //    public Tab2(){}
@@ -63,7 +49,7 @@ public class Tab2 extends Fragment {
         }
         try {
             view= inflater.inflate(R.layout.tab_2,container,false);
-
+            mGPSService = new GPSService(getActivity());
         }catch (InflateException e){
             /* map is already there, just return view as it is */
         }
@@ -113,27 +99,24 @@ public class Tab2 extends Fragment {
         @Override
     public void onResume() {
         super.onResume();
-//            GpsTracker gpsTracker = new GpsTracker(getActivity());
-            LatLng latLng = new LatLng(11.5565195, 104.9198001);
+//                    dis = CalculationByDistance(latLng,endP);
+
             if (mMap == null){
                 mMap = supportMapFragment.getMap();
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Brown"));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                if (gpsTracker.canGetLocation()){
-//                    LatLng latLng = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
-//                    LatLng endP = new LatLng(11.5565195, 104.9198001);
-//                    mMap.addMarker(new MarkerOptions().position(latLng).title("My location"));
-//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
-//                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                    dis = CalculationByDistance(latLng,endP);
-//                    Toast.makeText(getActivity(),"Dis : "+ dis,Toast.LENGTH_LONG).show();
-//                }
-//                else {
-//                    gpsTracker.showSettingsAlert();
-//                }
+                mGPSService.getLocation();
+                if (!mGPSService.isLocationAvailable){
+                    Toast.makeText(getActivity(), "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    LatLng latLng = new LatLng(mGPSService.getLatitude(),mGPSService.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latLng).title("My location"));
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+                // make sure you close the gps after using it. Save user's battery power
+                mGPSService.closeGPS();
             }
-
     }
 
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {
