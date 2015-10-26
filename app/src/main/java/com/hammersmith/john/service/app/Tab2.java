@@ -1,5 +1,6 @@
 package com.hammersmith.john.service.app;
 
+import android.location.Location;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -95,29 +96,33 @@ public class Tab2 extends Fragment {
         }
     }
 
-
-        @Override
-    public void onResume() {
-        super.onResume();
-//                    dis = CalculationByDistance(latLng,endP);
-
-            if (mMap == null){
-                mMap = supportMapFragment.getMap();
-                mGPSService.getLocation();
-                if (!mGPSService.isLocationAvailable){
-                    Toast.makeText(getActivity(), "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
-                    return;
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mMap == null){
+            mMap = supportMapFragment.getMap();
+            mMap.getUiSettings().setCompassEnabled(true);
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    mGPSService.getLocation();
+                    return false;
                 }
-                else {
-                    LatLng latLng = new LatLng(mGPSService.getLatitude(),mGPSService.getLongitude());
+            });
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location location) {
+                    LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(latLng).title("My location"));
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
-                // make sure you close the gps after using it. Save user's battery power
-                mGPSService.closeGPS();
-            }
+            });
+        }
     }
+
 
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {
         int Radius = 6371;// radius of earth in Km
