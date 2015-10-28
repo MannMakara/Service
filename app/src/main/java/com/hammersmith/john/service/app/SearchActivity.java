@@ -44,7 +44,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         actionBarName = getIntent().getStringExtra("title");
-        getSupportActionBar().setTitle("Searh: " + actionBarName);
+        getSupportActionBar().setTitle("Search: " + actionBarName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         textView = (TextView) findViewById(R.id.errorText);

@@ -93,7 +93,7 @@ public class TestTabActivity extends AppCompatActivity {
         recentSuggestions.saveRecentQuery(query, null);
         Toast.makeText(this, "query: " + query + " user_query: " + userQuery,
                 Toast.LENGTH_SHORT).show();
-        searchView.setQuery(query, false);
+        searchView.setQuery(query, false); // leave query text in SearchView
         Intent newActivity = new Intent(this,SearchActivity.class);
         newActivity.putExtra("title",query);
         startActivity(newActivity);
