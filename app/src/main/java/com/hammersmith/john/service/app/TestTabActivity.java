@@ -25,15 +25,25 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.adapter.ViewPagerAdapter;
+import com.hammersmith.john.service.controller.AppController;
 import com.hammersmith.john.service.slidingtab.SlidingTabLayout;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
+
+import utils.Constant;
 
 public class TestTabActivity extends AppCompatActivity {
 
@@ -90,13 +100,16 @@ public class TestTabActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
         String userQuery = String.valueOf(extras.get(SearchManager.USER_QUERY));
         String query = String.valueOf(extras.get(SearchManager.QUERY));
+
         recentSuggestions.saveRecentQuery(query, null);
         Toast.makeText(this, "query: " + query + " user_query: " + userQuery,
                 Toast.LENGTH_SHORT).show();
         searchView.setQuery(query, false); // leave query text in SearchView
+
         Intent newActivity = new Intent(this,SearchActivity.class);
-        newActivity.putExtra("title",query);
+        newActivity.putExtra("title", query);
         startActivity(newActivity);
+
     }
 
 }

@@ -10,5 +10,6 @@ public class Constant {
     public static final String URL_SEARCH = "http://192.168.123.21/icambodia/place/search/";
     public static final String URL_HOME = "http://192.168.123.21/icambodia/";
     public static final String URL_POST = "http://192.168.123.21/icambodia/users/add";
+    public static final String URL_LIST_PLACE = "http://192.168.123.21/icambodia/place/listplace";
 
 }

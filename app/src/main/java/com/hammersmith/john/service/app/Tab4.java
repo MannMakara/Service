@@ -8,6 +8,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -103,6 +104,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     GoogleApiClient googleApiClient;
     /*Google +*/
 
+    TextView txtTitle,mEmail;
+
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -111,6 +114,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             if(AccessToken.getCurrentAccessToken() != null){
                 btnFacebook = 2;
                 Toast.makeText(getApplicationContext(),btnFacebook+"",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),AccessToken.getCurrentAccessToken()+"",Toast.LENGTH_SHORT).show();
                 RequestData();
                 /*JSON Request*/
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
@@ -196,6 +200,16 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
          *
          * @return
          */
+
+        /*Text View */
+        txtTitle = (TextView) v.findViewById(R.id.title_name);
+        mEmail = (TextView) v.findViewById(R.id.email);
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Gasalt-Regular.ttf");
+        txtTitle.setTypeface(font);
+        mEmail.setTypeface(font);
+        /*Set TypeFace*/
+
+
         googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(Plus.API)
@@ -326,7 +340,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 
         if (profile == null) {
             profilePictureView.setProfileId(null);
-            userNameView.setText("Please click button login below");
+            userNameView.setText("");
+            mEmail.setText("");
         } else {
 //            profilePictureView.setProfileId(profile.getId());
 //            userNameView.setText("Welcome " + profile.getName() + "!!!!!!!"+ email);
@@ -474,11 +489,13 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 try {
                     if(json != null){
                         String text;
-                        text = "<b>Name :</b> "+json.getString("name")+"<br><br><b>Email :</b> "+json.getString("email")+"<br><br><b>Profile link :</b> "+json.getString("link");
+//                        text = "<b>Name :</b> "+json.getString("name")+"<br><br><b>Email :</b> "+json.getString("email")+"<br><br><b>Profile link :</b> "+json.getString("link");
                         userName = json.getString("name");
                         email = json.getString("email");
                         link = json.getString("link");
-                        userNameView.setText(Html.fromHtml(text));
+//                        userNameView.setText(Html.fromHtml(text));
+                        userNameView.setText(json.getString("name"));
+                        mEmail.setText(json.getString("email"));
                         profilePictureView.setProfileId(json.getString("id"));
                     }
 
