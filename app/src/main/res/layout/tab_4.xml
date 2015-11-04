@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/download">
+    android:background="@drawable/blur_screen">
 
     <TextView
         android:layout_marginTop="15dp"
@@ -49,6 +49,13 @@
         android:textStyle="bold"
         android:textColor="@color/white" />
 
+    <TextView
+        android:id="@+id/social_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:gravity="bottom"
         android:orientation="vertical"
@@ -77,11 +84,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <Button
+                android:textColor="@color/white"
                 android:id="@+id/googleSignOut"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/btn_sign_out"
-                android:visibility="gone" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_google_signin_dark_normal"
+                android:visibility="gone"
+                android:textAllCaps="false"/>
         </FrameLayout>
     </LinearLayout>
 

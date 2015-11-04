@@ -36,8 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             style="?android:attr/ratingBarStyleSmall"
-            android:paddingTop="13dp"
-            android:rating="3"/>
+            android:paddingTop="13dp"/>
         <TextView
             android:id="@+id/addr"
             android:layout_weight="1"
@@ -82,7 +81,7 @@
             android:textColor="#ff2b0a"
             android:gravity="center_vertical"
             android:layout_marginRight="10dp"
-            android:text="Discount 10%"/>
+            android:text="10% OFF"/>
 
     </LinearLayout>
 </RelativeLayout>

@@ -16,6 +16,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.app.PlaceDetailActivity;
 import com.hammersmith.john.service.controller.AppController;
@@ -45,7 +53,7 @@ public class PlaceRecyclerAdapter extends RecyclerView.Adapter<PlaceRecyclerAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View root = inflater.inflate(R.layout.place_detail,parent,false);
-        ViewHolder holder = new ViewHolder(root);
+        ViewHolder holder = new ViewHolder(parent.getContext(),root);
         return holder;
     }
 
@@ -81,14 +89,18 @@ public class PlaceRecyclerAdapter extends RecyclerView.Adapter<PlaceRecyclerAdap
         return 1;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
         TextView txtDetail,txtPhone,txtWeb,txtMail,txtFee;
         ImageView imgPhone,imgWeb,imgMail,imgLocate;
         Button btnBookMe;
         TableRow trCall;
+        MapView mapView;
+        GoogleMap mGoogleMap;
+        Context mContext;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(Context context, View itemView) {
             super(itemView);
+            mContext = context;
             txtDetail = (TextView) itemView.findViewById(R.id.detail);
             txtPhone = (TextView) itemView.findViewById(R.id.txtPhone);
             txtMail = (TextView) itemView.findViewById(R.id.txtMail);
@@ -98,11 +110,28 @@ public class PlaceRecyclerAdapter extends RecyclerView.Adapter<PlaceRecyclerAdap
             imgPhone = (ImageView) itemView.findViewById(R.id.imgPhone);
             imgMail = (ImageView) itemView.findViewById(R.id.imgMail);
             imgWeb = (ImageView) itemView.findViewById(R.id.imgWeb);
-            imgLocate = (ImageView) itemView.findViewById(R.id.imgLocate);
+//            imgLocate = (ImageView) itemView.findViewById(R.id.imgLocate);
 
             trCall = (TableRow) itemView.findViewById(R.id.call);
 
             btnBookMe = (Button) itemView.findViewById(R.id.btnBookMe);
+
+            mapView = (MapView) itemView.findViewById(R.id.map);
+
+            mapView.onCreate(null);
+            mapView.getMapAsync(this);
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            mGoogleMap = googleMap;
+
+            MapsInitializer.initialize(mContext);
+            googleMap.getUiSettings().setMapToolbarEnabled(false);
+
+            mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(11.570937,104.937177)));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(11.570937,104.937177),16f);
+            mGoogleMap.moveCamera(cameraUpdate);
         }
     }
 

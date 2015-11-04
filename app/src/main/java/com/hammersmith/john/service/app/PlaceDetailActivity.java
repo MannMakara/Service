@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -63,6 +64,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     public static int placeID;
 
+    ImageView img;
+
     /*New Adapter*/
 
     private PlaceViewPager mAdapter;
@@ -77,9 +80,11 @@ public class PlaceDetailActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
 
+        img = (ImageView) findViewById(R.id.img_place);
 
         setSupportActionBar(mToolbar);
 
+//        img.setImageResource(R.drawable.sokha); // can add Image here
 
         mAdapter = new PlaceViewPager(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.view_pager);
@@ -92,6 +97,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         placeID = Integer.parseInt(getIntent().getStringExtra("id"));
 
         mCollapsingToolbarLayout.setTitle(detail_place_title);
+
     }
 
     public static class MyFragment extends Fragment {
