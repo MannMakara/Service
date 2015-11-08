@@ -4,5 +4,5 @@
   android:label="@string/app_name"
   android:searchSuggestAuthority="com.hammersmith.john.service.app.SuggestionProvider"
   android:searchSuggestSelection=" ?"
-  android:searchSuggestThreshold="0"
+  android:searchSuggestThreshold="1"
   android:voiceSearchMode="showVoiceSearchButton|launchRecognizer" />

@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,7 @@ import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.controller.AppController;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,6 +107,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     /*Google +*/
 
     TextView txtTitle,mEmail,mSocialLink;
+    ImageView googlePro;
 
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
@@ -113,6 +116,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 //            Profile profile = Profile.getCurrentProfile();
             if(AccessToken.getCurrentAccessToken() != null){
                 btnFacebook = 2;
+                profilePictureView.setVisibility(View.VISIBLE); // Open ImageView Facebook
+//                button.setVisibility(View.GONE); // Disable Google+ logIn
                 Toast.makeText(getApplicationContext(),btnFacebook+"",Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(),AccessToken.getCurrentAccessToken()+"",Toast.LENGTH_SHORT).show();
                 RequestData();
@@ -202,6 +207,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
          */
 
         /*Text View */
+        googlePro = (ImageView) v.findViewById(R.id.googleProfile);
         txtTitle = (TextView) v.findViewById(R.id.title_name);
         mEmail = (TextView) v.findViewById(R.id.email);
         mSocialLink = (TextView) v.findViewById(R.id.social_link);
@@ -214,7 +220,9 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addScope(Plus.SCOPE_PLUS_PROFILE)
+                .build();
         /*Google Plus*/
 
         userNameView = (TextView) v.findViewById(R.id.profileUserName);
@@ -344,6 +352,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             profilePictureView.setProfileId(null);
             userNameView.setText("");
             mEmail.setText("");
+            profilePictureView.setVisibility(View.GONE);
         } else {
 //            profilePictureView.setProfileId(profile.getId());
 //            userNameView.setText("Welcome " + profile.getName() + "!!!!!!!"+ email);
@@ -464,6 +473,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 personName = currentPerson.getDisplayName();
 //                String personPhotoUrl;
                 personPhotoUrl = currentPerson.getImage().getUrl();
+                personPhotoUrl = personPhotoUrl.substring(0,personPhotoUrl.indexOf("sz=")+3)+"155";
 //                String personGooglePlusProfile;
                 personGooglePlusProfile = currentPerson.getUrl();
 
@@ -475,6 +485,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 userNameView.setText(personName);
                 mEmail.setText(emailGoogle);
                 mSocialLink.setText(personGooglePlusProfile);
+                Picasso.with(getActivity()).load(personPhotoUrl).into(googlePro);
             }
             else {
                 Toast.makeText(getApplicationContext(),
@@ -528,6 +539,9 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             googleApiClient.disconnect();
             googleApiClient.connect();
             updateUI(false);
+            userNameView.setText("");
+            mEmail.setText("");
+            googlePro.setVisibility(View.GONE);
         }
     }
 
@@ -540,11 +554,14 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             button.setVisibility(View.GONE);
             signOut.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.GONE);
+            profilePictureView.setVisibility(View.GONE);
         }
         else {
             button.setVisibility(View.VISIBLE);
             signOut.setVisibility(View.GONE);
             loginButton.setVisibility(View.VISIBLE);
+            profilePictureView.setVisibility(View.GONE);
+            googlePro.setVisibility(View.GONE);
         }
     }
 }
