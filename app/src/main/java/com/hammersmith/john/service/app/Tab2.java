@@ -32,13 +32,9 @@ public class Tab2 extends Fragment {
 
     private GoogleMap mMap;
     private SupportMapFragment supportMapFragment;
-    MapView mMapView;
-    Marker mMarker;
     private static View view;
     GPSService mGPSService;
 
-    double dis;
-//    public Tab2(){}
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,34 +50,6 @@ public class Tab2 extends Fragment {
         }catch (InflateException e){
             /* map is already there, just return view as it is */
         }
-
-//        mMapView = (MapView) v.findViewById(R.id.map);
-//        mMapView.onCreate(savedInstanceState);
-//        mMapView.onResume(); // needed to get the map to display immediately
-////       MapsInitializer.initialize(getActivity());
-//        mMap = mMapView.getMap();
-//        mMap.setBuildingsEnabled(true);
-//
-//        // Latitude Logtitude
-//        LatLng latLng = new LatLng(11.5565195, 104.9198001);
-//////        // Create Maker
-//        mMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("Brown Coffee"));
-//        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(15).build();
-//        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//        GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-//            @Override
-//            public void onMyLocationChange(Location location) {
-//                LatLng loc = new LatLng(location.getLatitude(),location.getLongitude());
-//                mMarker = mMap.addMarker(new MarkerOptions().position(loc));
-//                if (mMap != null){
-//                    CameraPosition cameraPosition = new CameraPosition.Builder().target(loc).zoom(15).build();
-//                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//                }
-//            }
-//        };
-//
-//        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
-
         return view;
     }
 

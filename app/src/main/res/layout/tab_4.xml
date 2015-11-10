@@ -20,12 +20,12 @@
         android:layout_height="wrap_content" />
 
     <FrameLayout
+        android:layout_marginTop="5dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <com.facebook.login.widget.ProfilePictureView
-            android:layout_marginTop="5dp"
             android:id="@+id/profilePic"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -36,24 +36,10 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/googleProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
 
     </FrameLayout>
-
-    <!--<com.facebook.login.widget.ProfilePictureView-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--android:id="@+id/profilePic"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--app:com_facebook_preset_size="normal"-->
-        <!--android:layout_gravity="center"-->
-        <!--/>-->
-    <!--<ImageView-->
-        <!--android:layout_gravity="center"-->
-        <!--android:id="@+id/googleProfile"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
 
     <TextView
         android:gravity="center"
@@ -111,11 +97,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <Button
-                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:textColor="@color/background_floating_material_dark"
                 android:id="@+id/googleSignOut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_google_signin_dark_normal"
+                android:background="@drawable/btn_google_signin_light_normal"
                 android:visibility="gone"
                 android:textAllCaps="false"/>
         </FrameLayout>

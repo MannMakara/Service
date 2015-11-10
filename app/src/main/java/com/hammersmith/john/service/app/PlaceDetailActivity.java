@@ -136,11 +136,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_favor){
-            Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_SHORT).show();
-            item.setIcon(R.drawable.ic_action_favorite_red);
-            return true;
+
+        switch (item.getItemId()){
+            case R.id.action_favor:
+                Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_SHORT).show();
+                item.setIcon(R.drawable.ic_action_favorite_red);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

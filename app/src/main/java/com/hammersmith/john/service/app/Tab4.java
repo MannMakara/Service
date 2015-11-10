@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,10 +44,19 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.IdentityProviders;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.hammersmith.john.service.R;
@@ -70,7 +80,7 @@ import static com.facebook.FacebookSdk.*;
 /**
  * Created by John on 8/27/2015.
  */
-public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     ProgressDialog progressDialog;
 
@@ -84,8 +94,9 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     ProfilePictureView profilePictureView;
     Profile pendingUpdateForUser;
     /*Google*/
-    String emailGoogle,personGooglePlusProfile,personPhotoUrl,personName;
-    Person currentPerson;
+    String emailGoogle,personID,personName;
+    Uri personPhotoUri;
+//    Person currentPerson;
     /*faceBook*/
     String userName, link, email;
     int btnFacebook,btnGoogle;
@@ -94,15 +105,11 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     SignInButton button;
     Button signOut;
     // Google client to interact with Google API
-    GoogleApiClient apiClient;
     public static final int RC_SIGN_IN = 0;
     /**
      * A flag indicating that a PendingIntent is in progress and prevents us
      * from starting further intents.
      */
-    private boolean mIntentInProgress;
-    private boolean mSignInClicked;
-    private ConnectionResult mConnectionResult;
     GoogleApiClient googleApiClient;
     /*Google +*/
 
@@ -112,15 +119,15 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-//            AccessToken accessToken = loginResult.getAccessToken();
 //            Profile profile = Profile.getCurrentProfile();
             if(AccessToken.getCurrentAccessToken() != null){
                 btnFacebook = 2;
                 profilePictureView.setVisibility(View.VISIBLE); // Open ImageView Facebook
-//                button.setVisibility(View.GONE); // Disable Google+ logIn
+                button.setVisibility(View.GONE); // Disable Google+ logIn
                 Toast.makeText(getApplicationContext(),btnFacebook+"",Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(),AccessToken.getCurrentAccessToken()+"",Toast.LENGTH_SHORT).show();
+                //[START Request DATA]
                 RequestData();
+                //[END Request DATA]
                 /*JSON Request*/
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
                         new Response.Listener<String>() {
@@ -188,97 +195,64 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         accessToken = AccessToken.getCurrentAccessToken();
         Profile.fetchProfileForCurrentAccessToken();
         setProfile(Profile.getCurrentProfile());
-//        accessTokenTracker.stopTracking();
-//        profileTracker.stopTracking();
-
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.tab_4,container,false);
-        /*Google Plus*/
-        /**
-         * API to return GoogleApiClient Make sure to create new after revoking
-         * access or for first time sign in
-         *
-         * @return
-         */
 
         /*Text View */
         googlePro = (ImageView) v.findViewById(R.id.googleProfile);
-        txtTitle = (TextView) v.findViewById(R.id.title_name);
         mEmail = (TextView) v.findViewById(R.id.email);
         mSocialLink = (TextView) v.findViewById(R.id.social_link);
+        txtTitle = (TextView) v.findViewById(R.id.title_name);
         Typeface font = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Gasalt-Regular.ttf");
         txtTitle.setTypeface(font);
         mEmail.setTypeface(font);
         /*Set TypeFace*/
-
-
-        googleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this).addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .addScope(Plus.SCOPE_PLUS_PROFILE)
-                .build();
-        /*Google Plus*/
-
         userNameView = (TextView) v.findViewById(R.id.profileUserName);
         profilePictureView = (ProfilePictureView) v.findViewById(R.id.profilePic);
         if (pendingUpdateForUser != null) {
             setProfile(pendingUpdateForUser);
             pendingUpdateForUser = null;
         }
-
-        /*Google*/
-
+        // Build GoogleApiClient, don't set account name
+        buildGoogleApiClient(null);
+        // Sign in button Google Plus
         button = (SignInButton) v.findViewById(R.id.google);
         signOut = (Button) v.findViewById(R.id.googleSignOut);
+        Typeface newfont = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Medium.ttf");
+        signOut.setTypeface(newfont);
         signOut.setText("Sign Out");
-        // Initializing google plus api client
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!googleApiClient.isConnecting()) {
-                    mSignInClicked = true;
-                    resolveSignInError();
-                    progressDialog = new ProgressDialog(getActivity());
-                    progressDialog.setIndeterminate(true);
-                    progressDialog.setMessage("Authenticating...");
-                    progressDialog.setCanceledOnTouchOutside(false);
-                    progressDialog.show();
-                }
-            }
-        });
+        button.setOnClickListener(this);
 
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Do you want to sign out from Google Plus?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        signOutGoogle();
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
-        });
+        signOut.setOnClickListener(this);
 
         return v;
     }
+
+    private void buildGoogleApiClient(String accountName) {
+        GoogleSignInOptions.Builder gsoBuilder = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail().requestProfile();
+
+        if (accountName != null) {
+            gsoBuilder.setAccountName(accountName);
+        }
+
+        if (googleApiClient != null) {
+            googleApiClient.stopAutoManage(getActivity());
+        }
+
+        GoogleApiClient.Builder builder = new GoogleApiClient.Builder(getActivity())
+                .enableAutoManage(getActivity(), this)
+                .addApi(Auth.CREDENTIALS_API)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gsoBuilder.build());
+
+        googleApiClient = builder.build();
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -288,6 +262,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         if(AccessToken.getCurrentAccessToken() != null){
             RequestData();
         }
+
         loginButton.setFragment(this);
         loginButton.registerCallback(callbackManager, callback);
     }
@@ -299,37 +274,103 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
 
-//        Fragment fragment = (Fragment) getChildFragmentManager().findFragmentByTag(null);
-//        if (fragment != null)
-//            fragment.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        }
 
-        /*Google Plus*/
-        if (requestCode == RC_SIGN_IN){
-            if (resultCode != Activity.RESULT_OK){
-                mSignInClicked = false;
-            }
-            mIntentInProgress = false;
-            if (!googleApiClient.isConnecting()){
-                googleApiClient.connect();
-            }
+    }
+
+    // [START handleSignInResult]
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d("Tab4", "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // ID to Button Google
+            btnGoogle = 1;
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+
+            personName = acct.getDisplayName();
+            emailGoogle = acct.getEmail();
+            personID = acct.getId();
+            personPhotoUri = acct.getPhotoUrl();
+            // Set Google Plus information to Layout
+
+            userNameView.setText(personName);
+            mEmail.setText(emailGoogle);
+            mSocialLink.setText(personID);
+            Picasso.with(getActivity()).load(personPhotoUri).into(googlePro);
+            Toast.makeText(getActivity(), "Hi: " + personName+ " Email: " + emailGoogle + " ID: " + personID + " Photo " + personPhotoUri, Toast.LENGTH_LONG)
+                    .show();
+            // [UPLOAD data to Server Via Json]
+            StringRequest gooleRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+                            Toast.makeText(getApplicationContext(),"Data from Google Inserted Successful",Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            Toast.makeText(getApplicationContext(), volleyError+"", Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("link", personID);
+                    params.put("username", personName);
+                    params.put("email", emailGoogle);
+                    params.put("social_type", String.valueOf(btnGoogle));
+                    return params;
+                }
+            };
+
+            AppController.getInstance().addToRequestQueue(gooleRequest);
+            // [END Upload]
+            updateUI(true);
+        } else {
+            // Signed out, show unauthenticated UI.
+            updateUI(false);
         }
     }
+    // [END handleSignInResult]
+
+    // [START signIn]
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    // [END signIn]
+
+    // [START signOut]
+    private void signOut() {
+        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        // [START_EXCLUDE]
+                        userNameView.setText("");
+                        mEmail.setText("");
+                        updateUI(false);
+                        // [END_EXCLUDE]
+                    }
+                });
+    }
+    // [END signOut]
 
     @Override
     public void onStop() {
         super.onStop();
         accessTokenTracker.stopTracking();
         profileTracker.startTracking();
-
-        /*Google Plus*/
-        if (googleApiClient.isConnected())
-            googleApiClient.disconnect();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Profile profile = Profile.getCurrentProfile();
+//        Profile profile = Profile.getCurrentProfile();
     }
 
     @Override
@@ -353,147 +394,73 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             userNameView.setText("");
             mEmail.setText("");
             profilePictureView.setVisibility(View.GONE);
+            button.setVisibility(View.VISIBLE);
         } else {
 //            profilePictureView.setProfileId(profile.getId());
 //            userNameView.setText("Welcome " + profile.getName() + "!!!!!!!"+ email);
         }
     }
 
-    /**
-     * Callback for GoogleApiClient connection success
-     */
-    @Override
-    public void onConnected(Bundle bundle) {
-        if (progressDialog.isShowing() == true) {
-            progressDialog.dismiss();
-        }
-        mSignInClicked = false;
-        Toast.makeText(getApplicationContext(), "Sign In successfully", Toast.LENGTH_LONG).show();
-        // Get user's information
-        getProfileInformation();
-
-        btnGoogle = 1;
-
-        Toast.makeText(getApplicationContext(),btnGoogle+"",Toast.LENGTH_SHORT).show();
-
-        /*JSON String Request*/
-        /*JSON Request*/
-        StringRequest gooleRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        Toast.makeText(getApplicationContext(),"Data from Google Inserted Successful",Toast.LENGTH_SHORT).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getApplicationContext(), volleyError+"", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("link", personGooglePlusProfile);
-                params.put("username", personName);
-                params.put("email", emailGoogle);
-                params.put("social_type", String.valueOf(btnGoogle));
-                return params;
-            }
-        };
-
-        AppController.getInstance().addToRequestQueue(gooleRequest);
-        /*Finish JsonRequest*/
-
-        // Update the UI after signin
-        updateUI(true);
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        googleApiClient.connect();
-    }
-
     @Override
     public void onClick(View v) {
 
+        switch (v.getId()){
+            case R.id.google:
+                signIn();
+                break;
+            case R.id.googleSignOut:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Do you want to sign out from Google Plus?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        signOut();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                break;
+        }
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        if (!connectionResult.hasResolution()){
-            GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(),getActivity(),0).show();
-            return;
-        }
-        if (!mIntentInProgress){
-            // Store the ConnectionResult for later usage
-            mConnectionResult = connectionResult;
-            if (mSignInClicked){
-                // The user has already clicked 'sign-in' so we attempt to
-                // resolve all
-                // errors until the user is signed in, or they cancel.
-                resolveSignInError();
-            }
-        }
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
+        Log.d("Tab4", "onConnectionFailed:" + connectionResult);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        googleApiClient.connect();
-    }
 
-    /**
-     * Method to resolve any signin errors
-     * */
-    private void resolveSignInError() {
-        if (mConnectionResult.hasResolution()){
-            mIntentInProgress = true;
-            try {
-                mConnectionResult.startResolutionForResult(getActivity(), RC_SIGN_IN);
-            } catch (IntentSender.SendIntentException e) {
-                mIntentInProgress = false;
-                googleApiClient.connect();
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    /**
-     * Fetching user's information name, email, profile pic
-     * */
-    private void getProfileInformation() {
-        try {
-            if (Plus.PeopleApi.getCurrentPerson(googleApiClient) != null){
-
-                currentPerson = Plus.PeopleApi.getCurrentPerson(googleApiClient);
-//                String personName;
-                personName = currentPerson.getDisplayName();
-//                String personPhotoUrl;
-                personPhotoUrl = currentPerson.getImage().getUrl();
-                personPhotoUrl = personPhotoUrl.substring(0,personPhotoUrl.indexOf("sz=")+3)+"155";
-//                String personGooglePlusProfile;
-                personGooglePlusProfile = currentPerson.getUrl();
-
-                emailGoogle = Plus.AccountApi.getAccountName(googleApiClient);
-                Toast.makeText(getActivity(), "Name: " + personName + ", plusProfile: "
-                        + personGooglePlusProfile + ", email: " + emailGoogle
-                        + ", Image: " + personPhotoUrl,Toast.LENGTH_SHORT).show();
-
-                userNameView.setText(personName);
-                mEmail.setText(emailGoogle);
-                mSocialLink.setText(personGooglePlusProfile);
-                Picasso.with(getActivity()).load(personPhotoUrl).into(googlePro);
-            }
-            else {
-                Toast.makeText(getApplicationContext(),
-                        "Person information is null", Toast.LENGTH_LONG).show();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+//        if (opr.isDone()) {
+//            // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
+//            // and the GoogleSignInResult will be available instantly.
+//            Log.d("Tab4", "Got cached sign-in");
+//            GoogleSignInResult result = opr.get();
+//            handleSignInResult(result);
+//        } else {
+//            // If the user has not previously signed in on this device or the sign-in has expired,
+//            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+//            // single sign-on will occur in this branch.
+//            showProgress();
+//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+//                @Override
+//                public void onResult(GoogleSignInResult googleSignInResult) {
+//                    hideProgress();
+//                    handleSignInResult(googleSignInResult);
+//                }
+//            });
+//        }
     }
 
     /* facebook get all user information */
@@ -530,22 +497,6 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     }
 
     /**
-     * Sign-out from google
-     * */
-
-    public void signOutGoogle(){
-        if (googleApiClient.isConnected()){
-            Plus.AccountApi.clearDefaultAccount(googleApiClient);
-            googleApiClient.disconnect();
-            googleApiClient.connect();
-            updateUI(false);
-            userNameView.setText("");
-            mEmail.setText("");
-            googlePro.setVisibility(View.GONE);
-        }
-    }
-
-    /**
      * Updating the UI, showing/hiding buttons and profile layout
      * */
 
@@ -554,14 +505,30 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             button.setVisibility(View.GONE);
             signOut.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.GONE);
-            profilePictureView.setVisibility(View.GONE);
+            googlePro.setVisibility(View.VISIBLE);
         }
         else {
             button.setVisibility(View.VISIBLE);
             signOut.setVisibility(View.GONE);
             loginButton.setVisibility(View.VISIBLE);
-            profilePictureView.setVisibility(View.GONE);
             googlePro.setVisibility(View.GONE);
         }
     }
+    
+    private void showProgress() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading...");
+        }
+
+        progressDialog.show();
+    }
+
+    private void hideProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
 }
