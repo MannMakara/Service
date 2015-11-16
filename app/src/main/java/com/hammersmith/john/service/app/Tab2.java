@@ -1,6 +1,10 @@
 package com.hammersmith.john.service.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,7 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.hammersmith.john.service.R;
-import com.hammersmith.john.service.gpsTracker.GPSService;
 
 import java.text.DecimalFormat;
 
@@ -33,7 +36,6 @@ public class Tab2 extends Fragment {
     private GoogleMap mMap;
     private SupportMapFragment supportMapFragment;
     private static View view;
-    GPSService mGPSService;
 
     @Nullable
     @Override
@@ -46,7 +48,6 @@ public class Tab2 extends Fragment {
         }
         try {
             view= inflater.inflate(R.layout.tab_2,container,false);
-            mGPSService = new GPSService(getActivity());
         }catch (InflateException e){
             /* map is already there, just return view as it is */
         }
@@ -75,7 +76,23 @@ public class Tab2 extends Fragment {
             mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
-                    mGPSService.getLocation();
+//                    mGPSService.askUserToOpenGPS();
+                    AlertDialog.Builder mAlertDialog = new AlertDialog.Builder(getActivity());
+
+                    // Setting Dialog Title
+                    mAlertDialog.setTitle("Location not available, Open GPS?")
+                            .setMessage("Activate GPS to use use location services?")
+                            .setPositiveButton("Open Settings", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    getActivity().startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).show();
                     return false;
                 }
             });
@@ -90,7 +107,6 @@ public class Tab2 extends Fragment {
             });
         }
     }
-
 
     public double CalculationByDistance(LatLng StartP, LatLng EndP) {
         int Radius = 6371;// radius of earth in Km

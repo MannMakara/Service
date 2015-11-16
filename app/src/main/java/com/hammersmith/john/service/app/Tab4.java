@@ -4,18 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +65,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import utils.Constant;
@@ -83,7 +78,6 @@ import static com.facebook.FacebookSdk.*;
 public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     ProgressDialog progressDialog;
-
     CallbackManager callbackManager;
     AccessTokenTracker accessTokenTracker;
     AccessToken accessToken;
@@ -119,44 +113,15 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-//            Profile profile = Profile.getCurrentProfile();
-            if(AccessToken.getCurrentAccessToken() != null){
+
+            if(AccessToken.getCurrentAccessToken() != null ) {
                 btnFacebook = 2;
                 profilePictureView.setVisibility(View.VISIBLE); // Open ImageView Facebook
                 button.setVisibility(View.GONE); // Disable Google+ logIn
-                Toast.makeText(getApplicationContext(),btnFacebook+"",Toast.LENGTH_SHORT).show();
                 //[START Request DATA]
                 RequestData();
                 //[END Request DATA]
-                /*JSON Request*/
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String s) {
-                                Toast.makeText(getApplicationContext(),"Data Inserted Successful",Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError volleyError) {
-                                Toast.makeText(getApplicationContext(), volleyError+"", Toast.LENGTH_SHORT).show();
-                            }
-                        }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("link", link);
-                        params.put("username", userName);
-                        params.put("email", email);
-                        params.put("social_type", String.valueOf(btnFacebook));
-                        return params;
-                    }
-                };
-
-                AppController.getInstance().addToRequestQueue(stringRequest);
-            /*Finish JsonRequest*/
             }
-
         }
 
         @Override
@@ -169,6 +134,17 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 
         }
     };
+
+    private Map<String, String> checkParams(Map<String, String> map){
+        Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, String> pairs = (Map.Entry<String, String>)it.next();
+            if(pairs.getValue()==null){
+                map.put(pairs.getKey(), "");
+            }
+        }
+        return map;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -258,8 +234,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loginButton = (LoginButton) view.findViewById(R.id.facebook);
-        loginButton.setReadPermissions(Arrays.asList("public_profile,email"));
-        if(AccessToken.getCurrentAccessToken() != null){
+        loginButton.setReadPermissions(Arrays.asList("public_profile","email"));
+        if(Profile.getCurrentProfile() != null){
             RequestData();
         }
 
@@ -370,7 +346,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     @Override
     public void onResume() {
         super.onResume();
-//        Profile profile = Profile.getCurrentProfile();
+        Profile profile = Profile.getCurrentProfile();
+        setProfile(profile);
     }
 
     @Override
@@ -395,9 +372,6 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             mEmail.setText("");
             profilePictureView.setVisibility(View.GONE);
             button.setVisibility(View.VISIBLE);
-        } else {
-//            profilePictureView.setProfileId(profile.getId());
-//            userNameView.setText("Welcome " + profile.getName() + "!!!!!!!"+ email);
         }
     }
 
@@ -472,21 +446,46 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 JSONObject json = response.getJSONObject();
                 try {
                     if(json != null){
-                        String text;
-//                        text = "<b>Name :</b> "+json.getString("name")+"<br><br><b>Email :</b> "+json.getString("email")+"<br><br><b>Profile link :</b> "+json.getString("link");
                         userName = json.getString("name");
                         email = json.getString("email");
-                        link = json.getString("link");
-//                        userNameView.setText(Html.fromHtml(text));
+                        link = json.getString("id");
+//                        link = json.getString("link");
                         userNameView.setText(json.getString("name"));
                         mEmail.setText(json.getString("email"));
-                        mSocialLink.setText(json.getString("link"));
+                        mSocialLink.setText(link);
                         profilePictureView.setProfileId(json.getString("id"));
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                /*JSON Request*/
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String s) {
+                                Toast.makeText(getApplicationContext(), "Data Inserted Successful", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                Toast.makeText(getApplicationContext(), volleyError + "", Toast.LENGTH_SHORT).show();
+                            }
+                        }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("link", link);
+                        params.put("username", userName);
+                        params.put("email", email);
+                        params.put("social_type", String.valueOf(btnFacebook));
+                        return params;
+                    }
+                };
+                AppController.getInstance().addToRequestQueue(stringRequest);
+            /*Finish JsonRequest*/
 
             }
         });

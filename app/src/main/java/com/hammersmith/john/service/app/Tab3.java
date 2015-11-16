@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.hammersmith.john.service.R;
+import com.hammersmith.john.service.controller.AppController;
 
 import org.json.JSONArray;
 
@@ -42,6 +43,8 @@ public class Tab3 extends Fragment {
 
             }
         });
+
+        AppController.getInstance().addToRequestQueue(favorReq);
         /*JSON Request */
         return v;
     }
