@@ -62,13 +62,6 @@
         android:textStyle="bold"
         android:textColor="@color/white" />
 
-    <TextView
-        android:id="@+id/social_link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:visibility="gone"/>
-
     <LinearLayout
         android:gravity="bottom"
         android:orientation="vertical"

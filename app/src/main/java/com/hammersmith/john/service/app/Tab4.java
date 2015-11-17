@@ -2,8 +2,10 @@ package com.hammersmith.john.service.app;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -77,6 +79,8 @@ import static com.facebook.FacebookSdk.*;
  */
 public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
+    private SharedPreferences preferences; // SharedPreferences
+
     ProgressDialog progressDialog;
     CallbackManager callbackManager;
     AccessTokenTracker accessTokenTracker;
@@ -93,7 +97,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 //    Person currentPerson;
     /*faceBook*/
     String userName, link, email;
-    int btnFacebook,btnGoogle;
+    int btnFacebook=2,btnGoogle;
 
     /*Google +*/
     SignInButton button;
@@ -107,7 +111,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     GoogleApiClient googleApiClient;
     /*Google +*/
 
-    TextView txtTitle,mEmail,mSocialLink;
+    TextView txtTitle,mEmail;
     ImageView googlePro;
 
     private FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
@@ -115,7 +119,6 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         public void onSuccess(LoginResult loginResult) {
 
             if(AccessToken.getCurrentAccessToken() != null ) {
-                btnFacebook = 2;
                 profilePictureView.setVisibility(View.VISIBLE); // Open ImageView Facebook
                 button.setVisibility(View.GONE); // Disable Google+ logIn
                 //[START Request DATA]
@@ -181,7 +184,6 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         /*Text View */
         googlePro = (ImageView) v.findViewById(R.id.googleProfile);
         mEmail = (TextView) v.findViewById(R.id.email);
-        mSocialLink = (TextView) v.findViewById(R.id.social_link);
         txtTitle = (TextView) v.findViewById(R.id.title_name);
         Typeface font = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Gasalt-Regular.ttf");
         txtTitle.setTypeface(font);
@@ -274,10 +276,15 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 
             userNameView.setText(personName);
             mEmail.setText(emailGoogle);
-            mSocialLink.setText(personID);
             Picasso.with(getActivity()).load(personPhotoUri).into(googlePro);
-            Toast.makeText(getActivity(), "Hi: " + personName+ " Email: " + emailGoogle + " ID: " + personID + " Photo " + personPhotoUri, Toast.LENGTH_LONG)
+            Toast.makeText(getActivity(), "Hi: " + personName + " Email: " + emailGoogle + " ID: " + personID + " Photo " + personPhotoUri, Toast.LENGTH_LONG)
                     .show();
+            //[Start Shared Preferences]
+            preferences = getActivity().getSharedPreferences("Code", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("CodeID",personID);
+            editor.commit();
+            //[End Shared Preferences]
             // [UPLOAD data to Server Via Json]
             StringRequest gooleRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
                     new Response.Listener<String>() {
@@ -329,6 +336,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                         // [START_EXCLUDE]
                         userNameView.setText("");
                         mEmail.setText("");
+                        preferences.edit().remove("CodeID").commit();
                         updateUI(false);
                         // [END_EXCLUDE]
                     }
@@ -346,8 +354,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     @Override
     public void onResume() {
         super.onResume();
-        Profile profile = Profile.getCurrentProfile();
-        setProfile(profile);
+//        Profile profile = Profile.getCurrentProfile();
+//        setProfile(profile);
     }
 
     @Override
@@ -452,7 +460,6 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 //                        link = json.getString("link");
                         userNameView.setText(json.getString("name"));
                         mEmail.setText(json.getString("email"));
-                        mSocialLink.setText(link);
                         profilePictureView.setProfileId(json.getString("id"));
                     }
 
