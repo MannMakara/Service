@@ -3,6 +3,7 @@ package com.hammersmith.john.service.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.app.Tab1;

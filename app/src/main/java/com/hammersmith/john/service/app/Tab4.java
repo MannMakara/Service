@@ -79,7 +79,6 @@ import static com.facebook.FacebookSdk.*;
  */
 public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
-    private SharedPreferences preferences; // SharedPreferences
 
     ProgressDialog progressDialog;
     CallbackManager callbackManager;
@@ -119,6 +118,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         public void onSuccess(LoginResult loginResult) {
 
             if(AccessToken.getCurrentAccessToken() != null ) {
+
                 profilePictureView.setVisibility(View.VISIBLE); // Open ImageView Facebook
                 button.setVisibility(View.GONE); // Disable Google+ logIn
                 //[START Request DATA]
@@ -224,7 +224,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         }
 
         GoogleApiClient.Builder builder = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity(), this)
+                .enableAutoManage(getActivity(),0, this)
                 .addApi(Auth.CREDENTIALS_API)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gsoBuilder.build());
 
@@ -279,12 +279,9 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             Picasso.with(getActivity()).load(personPhotoUri).into(googlePro);
             Toast.makeText(getActivity(), "Hi: " + personName + " Email: " + emailGoogle + " ID: " + personID + " Photo " + personPhotoUri, Toast.LENGTH_LONG)
                     .show();
-            //[Start Shared Preferences]
-            preferences = getActivity().getSharedPreferences("Code", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("CodeID",personID);
-            editor.commit();
-            //[End Shared Preferences]
+
+            ((TestTabActivity) getActivity()).setLastCode(personID);
+
             // [UPLOAD data to Server Via Json]
             StringRequest gooleRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
                     new Response.Listener<String>() {
@@ -336,7 +333,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                         // [START_EXCLUDE]
                         userNameView.setText("");
                         mEmail.setText("");
-                        preferences.edit().remove("CodeID").commit();
+                        ((TestTabActivity) getActivity()).setLastCode("");
                         updateUI(false);
                         // [END_EXCLUDE]
                     }
@@ -472,6 +469,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String s) {
+
                                 Toast.makeText(getApplicationContext(), "Data Inserted Successful", Toast.LENGTH_SHORT).show();
                             }
                         },

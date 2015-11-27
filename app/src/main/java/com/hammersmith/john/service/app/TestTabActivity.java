@@ -47,6 +47,16 @@ import utils.Constant;
 
 public class TestTabActivity extends AppCompatActivity {
 
+    String code;
+
+    public String getLastCode() {
+        return this.code;
+    }
+
+    public void setLastCode(String newValue) {
+        this.code = newValue;
+    }
+
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
@@ -75,6 +85,7 @@ public class TestTabActivity extends AppCompatActivity {
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
+        pager.setOffscreenPageLimit(3); // Advoid All fragment run onCreate Method in the same time
 
         // Assiging the Sliding Tab Layout View
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);

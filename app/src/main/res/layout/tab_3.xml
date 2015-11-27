@@ -6,7 +6,7 @@
 
     <ListView
         android:id="@+id/favor_list"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <TextView
@@ -17,6 +17,7 @@
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
+
 
 </RelativeLayout>
