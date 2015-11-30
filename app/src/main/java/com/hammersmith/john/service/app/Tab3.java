@@ -1,6 +1,7 @@
 package com.hammersmith.john.service.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +44,9 @@ public class Tab3 extends Fragment {
     List<Place> placeList = new ArrayList<Place>();
     Place place;
 
+    String[] placeID;
+    String[] titile;
+
     String codeID;
 
     @Nullable
@@ -55,6 +60,8 @@ public class Tab3 extends Fragment {
         adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
         listPlace.setAdapter(adapterFavorPlace);
 
+        adapterFavorPlace.notifyDataSetChanged();
+
         return v;
     }
 
@@ -63,42 +70,65 @@ public class Tab3 extends Fragment {
         super.onResume();
         codeID = ((TestTabActivity) getActivity()).getLastCode();
 
-        /*JSON Request */
-        if (placeList.size() <= 0) {
-            JsonArrayRequest favorReq = new JsonArrayRequest(Constant.URL_LIST_FAVOR_PLACE + codeID, new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray jsonArray) {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        try {
-                            JSONObject object = jsonArray.getJSONObject(i);
-                            place = new Place();
-                            place.setName(object.getString("customer_name"));
-                            place.setAddress(object.getString("address"));
-                            place.setImage(Constant.URL_HOME + object.getString("logo_path"));
-                            placeList.add(place);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        if (codeID == null){
+            textView.setVisibility(View.VISIBLE);
+            listPlace.setVisibility(View.GONE);
+            listPlace.setAdapter(null);
+        }
+        else {
+            textView.setVisibility(View.GONE);
+            listPlace.setVisibility(View.VISIBLE);
+            /*JSON Request */
+            if (placeList.size() <= 0) {
+                JsonArrayRequest favorReq = new JsonArrayRequest(Constant.URL_LIST_FAVOR_PLACE + codeID, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        placeID = new String[jsonArray.length()];
+                        titile = new String[jsonArray.length()];
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            try {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                place = new Place();
+                                place.setName(object.getString("customer_name"));
+                                place.setAddress(object.getString("address"));
+                                place.setImage(Constant.URL_HOME + object.getString("logo_path"));
+                                placeList.add(place);
+                                placeID[i] = object.getString("place_id");
+                                titile[i] = object.getString("customer_name");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        adapterFavorPlace.notifyDataSetChanged();
                     }
-                    adapterFavorPlace.notifyDataSetChanged();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
 
+                    }
+                });
+
+                AppController.getInstance().addToRequestQueue(favorReq);
+            }
+        /*JSON Request */
+            adapterFavorPlace.notifyDataSetChanged();
+            Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
+
+            listPlace.setAdapter(adapterFavorPlace);
+
+            listPlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(getActivity(), PlaceDetailActivity.class);
+                    intent.putExtra("id", placeID[position]);
+                    intent.putExtra("title", titile[position]);
+                    startActivity(intent);
                 }
             });
 
-            AppController.getInstance().addToRequestQueue(favorReq);
         }
-        /*JSON Request */
 
-        Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
+
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        preferences.edit().remove("CodeID").commit();
-    }
 }

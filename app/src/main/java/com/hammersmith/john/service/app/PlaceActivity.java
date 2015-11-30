@@ -68,7 +68,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         if (placeList.size() <= 0){
 
-            JsonArrayRequest placeReq = new JsonArrayRequest(Constant.URL_PLACE+place_url, new Response.Listener<JSONArray>() {
+            JsonArrayRequest placeReq = new JsonArrayRequest(Constant.URL_PLACE + place_url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray jsonArray) {
                     place_id = new String[jsonArray.length()];

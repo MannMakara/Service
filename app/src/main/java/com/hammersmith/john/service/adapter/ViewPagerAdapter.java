@@ -74,4 +74,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements SlidingTab
     public int getPageIconResId(int position) {
         return iconRes[position];
     }
+
+//    @Override
+//    public int getItemPosition(Object object) {
+////        return super.getItemPosition(object);
+//        notifyDataSetChanged();
+//        return POSITION_NONE;
+//    }
 }
