@@ -277,8 +277,6 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             userNameView.setText(personName);
             mEmail.setText(emailGoogle);
             Picasso.with(getActivity()).load(personPhotoUri).into(googlePro);
-            Toast.makeText(getActivity(), "Hi: " + personName + " Email: " + emailGoogle + " ID: " + personID + " Photo " + personPhotoUri, Toast.LENGTH_LONG)
-                    .show();
 
             ((TestTabActivity) getActivity()).setLastCode(personID);
 

@@ -53,21 +53,39 @@ public class Tab3 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_3, container, false);
+
         listPlace = (ListView) v.findViewById(R.id.favor_list);
 
         textView = (TextView) v.findViewById(R.id.errorText);
 
-        adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
-        listPlace.setAdapter(adapterFavorPlace);
+        if (codeID == null){
+            textView.setVisibility(View.VISIBLE);
+            listPlace.setVisibility(View.GONE);
+        }
 
-        adapterFavorPlace.notifyDataSetChanged();
+//        if (codeID == null){
+//            textView.setVisibility(View.VISIBLE);
+//            listPlace.setVisibility(View.GONE);
+//            listPlace.setAdapter(null);
+//        }
+//        else {
+//            textView.setVisibility(View.GONE);
+//            listPlace.setVisibility(View.VISIBLE);
+//        }
+////        adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
+////        listPlace.setAdapter(adapterFavorPlace);
+////
+////        adapterFavorPlace.notifyDataSetChanged();
 
         return v;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
+
         codeID = ((TestTabActivity) getActivity()).getLastCode();
 
         if (codeID == null){
@@ -111,6 +129,7 @@ public class Tab3 extends Fragment {
                 AppController.getInstance().addToRequestQueue(favorReq);
             }
         /*JSON Request */
+            adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
             adapterFavorPlace.notifyDataSetChanged();
             Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
 

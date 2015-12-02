@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by John on 8/24/2015.
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter implements SlidingTabLayout.TabIconProvider {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter implements SlidingTabLayout.TabIconProvider {
 
     private Map<Integer, String> mFragmentTags;
     private Context context;
@@ -92,23 +92,4 @@ public class ViewPagerAdapter extends FragmentPagerAdapter implements SlidingTab
         return iconRes[position];
     }
 
-//    @Override
-//    public Object instantiateItem(ViewGroup container, int position) {
-//        Object obj = super.instantiateItem(container, position);
-//        if (obj instanceof Fragment) {
-//            // Record the fragment tags here
-//            Fragment f = (Fragment) obj;
-//            String tag = f.getTag();
-//            mFragmentTags.put(position, tag);
-//        }
-//        return obj;
-//    }
-//
-//    public Fragment getFragment(int position) {
-//        String tag = mFragmentTags.get(position);
-//        if (tag == null){
-//            return null;
-//        }
-//        return fragmentManager.findFragmentByTag(tag);
-//    }
 }

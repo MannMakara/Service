@@ -87,7 +87,7 @@ public class TestTabActivity extends AppCompatActivity {
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(4); // Advoid All fragment run onCreate Method in the same time
+        pager.setOffscreenPageLimit(3); // Advoid All fragment run onCreate Method in the same time
 
         // Assiging the Sliding Tab Layout View
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
