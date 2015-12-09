@@ -35,7 +35,7 @@ import utils.Constant;
 /**
  * Created by John on 8/24/2015.
  */
-public class Tab3 extends Fragment {
+public class Tab3 extends Fragment{
 
     ListView listPlace;
     TextView textView;
@@ -47,21 +47,23 @@ public class Tab3 extends Fragment {
     String[] placeID;
     String[] titile;
 
-    String codeID;
+    String codeID = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.tab_3, container, false);
 
+        View v = inflater.inflate(R.layout.tab_3, container, false);
         listPlace = (ListView) v.findViewById(R.id.favor_list);
 
         textView = (TextView) v.findViewById(R.id.errorText);
+        codeID = ((TestTabActivity) getActivity()).getLastCode();
+//        if (codeID == null){
+//            Toast.makeText(getActivity(),"On Create View Null code id codition",Toast.LENGTH_LONG).show();
+//        }else{
+//            Toast.makeText(getActivity(),"On Create Not Null code id codition",Toast.LENGTH_LONG).show();
+//        }
 
-        if (codeID == null){
-            textView.setVisibility(View.VISIBLE);
-            listPlace.setVisibility(View.GONE);
-        }
 
 //        if (codeID == null){
 //            textView.setVisibility(View.VISIBLE);
@@ -80,7 +82,40 @@ public class Tab3 extends Fragment {
         return v;
     }
 
-
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//        codeID = ((TestTabActivity) getActivity()).getLastCode();
+//        if (codeID == null){
+//            Toast.makeText(getActivity(),"On Restore Null code id codition",Toast.LENGTH_LONG).show();
+//        }else{
+//            Toast.makeText(getActivity(),"On Restore Not Null code id codition",Toast.LENGTH_LONG).show();
+//        }
+//    }
+//
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        codeID = ((TestTabActivity) getActivity()).getLastCode();
+//        if (codeID == null){
+//            Toast.makeText(getActivity(),"On Create Null code id codition",Toast.LENGTH_LONG).show();
+//        }else{
+//            Toast.makeText(getActivity(),"On Create Not Null code id codition",Toast.LENGTH_LONG).show();
+//        }
+//    }
+//
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        codeID = ((TestTabActivity) getActivity()).getLastCode();
+//        if (codeID == null){
+//            Toast.makeText(getActivity(),"On Start Null code id codition",Toast.LENGTH_LONG).show();
+//        }else{
+//            Toast.makeText(getActivity(),"On Start Not Null code id codition",Toast.LENGTH_LONG).show();
+//        }
+//    }
 
     @Override
     public void onResume() {
@@ -88,12 +123,17 @@ public class Tab3 extends Fragment {
 
         codeID = ((TestTabActivity) getActivity()).getLastCode();
 
+//        Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
+
         if (codeID == null){
+//            Toast.makeText(getActivity(),"On Resume Null code id codition",Toast.LENGTH_LONG).show();
             textView.setVisibility(View.VISIBLE);
             listPlace.setVisibility(View.GONE);
             listPlace.setAdapter(null);
         }
         else {
+//            Toast.makeText(getActivity(),"On Resume Not Null Condition",Toast.LENGTH_LONG).show();
+            placeList.clear();
             textView.setVisibility(View.GONE);
             listPlace.setVisibility(View.VISIBLE);
             /*JSON Request */
@@ -131,7 +171,7 @@ public class Tab3 extends Fragment {
         /*JSON Request */
             adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
             adapterFavorPlace.notifyDataSetChanged();
-            Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
 
             listPlace.setAdapter(adapterFavorPlace);
 
@@ -146,7 +186,6 @@ public class Tab3 extends Fragment {
             });
 
         }
-
 
     }
 

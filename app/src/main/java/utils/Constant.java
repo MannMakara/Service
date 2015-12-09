@@ -11,5 +11,6 @@ public class Constant {
     public static final String URL_HOME = "http://192.168.123.21/icambodia/";
     public static final String URL_POST = "http://192.168.123.21/icambodia/users/add";
     public static final String URL_LIST_FAVOR_PLACE = "http://192.168.123.21/icambodia/place/favorite/";
+    public static final String URL_ADD_FAVOR_PLACE = "http://192.168.123.21/icambodia/favorite/";
 
 }

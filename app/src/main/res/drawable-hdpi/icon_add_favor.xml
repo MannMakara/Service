@@ -3,11 +3,11 @@
 
     <!--When Selected use Red-->
     <item
-        android:drawable="@drawable/ic_action_action_favorite_dark"
+        android:drawable="@drawable/heart"
         android:state_selected="true"/>
 
     <!-- Not select use white-->
     <item
-        android:drawable="@drawable/ic_action_action_favorite"/>
+        android:drawable="@drawable/ic_favorite_white_48dp"/>
 
 </selector>

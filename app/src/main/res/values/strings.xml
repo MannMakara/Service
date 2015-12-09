@@ -26,4 +26,5 @@
     <string name="search_hint">Search</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="booking">Book by Phone</string>
+
 </resources>

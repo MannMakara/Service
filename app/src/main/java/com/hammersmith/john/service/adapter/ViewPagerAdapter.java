@@ -54,6 +54,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter implements Slidi
         this.fragmentManager = fm;
         this.context = context;
         mFragmentTags = new HashMap<Integer, String>();
+        mFragmentTags.clear();
     }
 
     public ViewPagerAdapter(FragmentManager fm){

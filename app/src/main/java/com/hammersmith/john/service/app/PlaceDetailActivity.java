@@ -1,9 +1,14 @@
 package com.hammersmith.john.service.app;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -43,6 +48,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +77,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private PlaceViewPager mAdapter;
     public static Place place;
 
+
+    FloatingActionButton fab;
+
+    private boolean mSingInClicked = false;
+    private String mGoogleCode = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +93,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
 
         img = (ImageView) findViewById(R.id.img_place);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         setSupportActionBar(mToolbar);
 
@@ -97,6 +111,73 @@ public class PlaceDetailActivity extends AppCompatActivity {
         placeID = Integer.parseInt(getIntent().getStringExtra("id"));
 
         mCollapsingToolbarLayout.setTitle(detail_place_title);
+
+        //Floating Action Button
+
+        mSingInClicked = Tab4.mSignInClicked;
+        mGoogleCode = Tab4.mGoogleCode;
+
+        if (mSingInClicked){
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(),"Click : "+ mGoogleCode+" / "+placeID,Toast.LENGTH_SHORT).show();
+                    fab.setImageResource(R.drawable.heart);
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Constant.URL_ADD_FAVOR_PLACE + mGoogleCode + "/" + placeID, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            try {
+                                String s = jsonObject.getString("msg");
+                                Toast.makeText(getApplicationContext(),"Added to Favorite",Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(),"Already have ",Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    AppController.getInstance().addToRequestQueue(request);
+                }
+            });
+
+            fab.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Long Click", Toast.LENGTH_SHORT).show();
+                    fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+                    return true;
+                }
+            });
+        }
+        else {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Snackbar snackbar = Snackbar.make(mCoordinator,"Please Log In",Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Log In", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(getApplicationContext(), "Please LogIn" + mGoogleCode + " / " + placeID, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                    snackbar.setActionTextColor(Color.RED);
+                    // Changing action button text color
+                    View sbView = snackbar.getView();
+                    TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.YELLOW);
+
+                    snackbar.show();
+                }
+            });
+        }
+
 
     }
 
@@ -117,7 +198,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            int id_detail = PlaceDetailActivity.placeID;
+//            int id_detail = PlaceDetailActivity.placeID;
             place = new Place();
 
 //            Bundle arguments = getArguments();
@@ -128,21 +209,4 @@ public class PlaceDetailActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_place_detail,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case R.id.action_favor:
-                Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_SHORT).show();
-                item.setIcon(R.drawable.ic_action_favorite_red);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

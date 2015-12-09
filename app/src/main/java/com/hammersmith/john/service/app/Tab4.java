@@ -79,6 +79,9 @@ import static com.facebook.FacebookSdk.*;
  */
 public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
+    public static boolean mSignInClicked = false;
+    public static String mGoogleCode = null;
+
 
     ProgressDialog progressDialog;
     CallbackManager callbackManager;
@@ -280,6 +283,10 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 
             ((TestTabActivity) getActivity()).setLastCode(personID);
 
+            // Send to Place Detail Activity
+
+            mGoogleCode = personID;
+
             // [UPLOAD data to Server Via Json]
             StringRequest gooleRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
                     new Response.Listener<String>() {
@@ -324,18 +331,21 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 
     // [START signOut]
     private void signOut() {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
                         // [START_EXCLUDE]
                         userNameView.setText("");
                         mEmail.setText("");
-                        ((TestTabActivity) getActivity()).setLastCode("");
+                        ((TestTabActivity) getActivity()).setLastCode(null);
+                        //
+                        getActivity().recreate();
                         updateUI(false);
                         // [END_EXCLUDE]
                     }
                 });
+
     }
     // [END signOut]
 
@@ -383,6 +393,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 
         switch (v.getId()){
             case R.id.google:
+                mSignInClicked = true;
                 signIn();
                 break;
             case R.id.googleSignOut:
@@ -391,6 +402,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        mSignInClicked = false;
+                        mGoogleCode = null;
                         signOut();
                     }
                 });
