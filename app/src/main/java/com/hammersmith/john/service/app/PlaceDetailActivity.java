@@ -114,19 +114,41 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         //Floating Action Button
 
-        mSingInClicked = Tab4.mSignInClicked;
-        mGoogleCode = Tab4.mGoogleCode;
+            mSingInClicked = Tab4.mSignInClicked;
+            mGoogleCode = Tab4.mGoogleCode;
 
-        if (mSingInClicked){
+            if (mSingInClicked){
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Constant.URL_DETECT_FAVOR_PLACE + mGoogleCode + "/" + placeID, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        try {
+                            fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+                            String s = jsonObject.getString("msg");
+                            Toast.makeText(getApplicationContext(),"Added to Favorite",Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            fab.setImageResource(R.drawable.heart);
+                            Toast.makeText(getApplicationContext(),"Already have ",Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AppController.getInstance().addToRequestQueue(request);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getApplicationContext(),"Click : "+ mGoogleCode+" / "+placeID,Toast.LENGTH_SHORT).show();
-                    fab.setImageResource(R.drawable.heart);
+//                    fab.setImageResource(R.drawable.heart);
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Constant.URL_ADD_FAVOR_PLACE + mGoogleCode + "/" + placeID, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             try {
+                                fab.setImageResource(R.drawable.heart);
                                 String s = jsonObject.getString("msg");
                                 Toast.makeText(getApplicationContext(),"Added to Favorite",Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
@@ -155,24 +177,15 @@ public class PlaceDetailActivity extends AppCompatActivity {
             });
         }
         else {
+                fab.setImageResource(R.drawable.ic_favorite_white_48dp);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    Snackbar snackbar = Snackbar.make(mCoordinator,"Please Log In",Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Log In", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Toast.makeText(getApplicationContext(), "Please LogIn" + mGoogleCode + " / " + placeID, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                    snackbar.setActionTextColor(Color.RED);
+                    Snackbar snackbar = Snackbar.make(mCoordinator,"Please Log In",Snackbar.LENGTH_INDEFINITE);
                     // Changing action button text color
                     View sbView = snackbar.getView();
                     TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
                     textView.setTextColor(Color.YELLOW);
-
                     snackbar.show();
                 }
             });
