@@ -125,6 +125,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 profilePictureView.setVisibility(View.VISIBLE); // Open ImageView Facebook
                 button.setVisibility(View.GONE); // Disable Google+ logIn
                 //[START Request DATA]
+                mSignInClicked = true;
                 RequestData();
                 //[END Request DATA]
             }
@@ -381,6 +382,9 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
 
         if (profile == null) {
             profilePictureView.setProfileId(null);
+            mSignInClicked = false;
+            mGoogleCode = null;
+            ((TestTabActivity) getActivity()).setLastCode(null);
             userNameView.setText("");
             mEmail.setText("");
             profilePictureView.setVisibility(View.GONE);
@@ -502,7 +506,8 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 };
                 AppController.getInstance().addToRequestQueue(stringRequest);
             /*Finish JsonRequest*/
-
+                mGoogleCode = link;
+                ((TestTabActivity) getActivity()).setLastCode(link);
             }
         });
         Bundle parameters = new Bundle();
