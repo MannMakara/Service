@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,6 @@ import utils.Constant;
  * Created by John on 8/24/2015.
  */
 public class Tab3 extends Fragment{
-
     ListView listPlace;
     TextView textView;
 
@@ -57,65 +57,9 @@ public class Tab3 extends Fragment{
         listPlace = (ListView) v.findViewById(R.id.favor_list);
 
         textView = (TextView) v.findViewById(R.id.errorText);
-        codeID = ((TestTabActivity) getActivity()).getLastCode();
-//        if (codeID == null){
-//            Toast.makeText(getActivity(),"On Create View Null code id codition",Toast.LENGTH_LONG).show();
-//        }else{
-//            Toast.makeText(getActivity(),"On Create Not Null code id codition",Toast.LENGTH_LONG).show();
-//        }
-
-
-//        if (codeID == null){
-//            textView.setVisibility(View.VISIBLE);
-//            listPlace.setVisibility(View.GONE);
-//            listPlace.setAdapter(null);
-//        }
-//        else {
-//            textView.setVisibility(View.GONE);
-//            listPlace.setVisibility(View.VISIBLE);
-//        }
-////        adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
-////        listPlace.setAdapter(adapterFavorPlace);
-////
-////        adapterFavorPlace.notifyDataSetChanged();
 
         return v;
     }
-
-//    @Override
-//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-//        super.onViewStateRestored(savedInstanceState);
-//        codeID = ((TestTabActivity) getActivity()).getLastCode();
-//        if (codeID == null){
-//            Toast.makeText(getActivity(),"On Restore Null code id codition",Toast.LENGTH_LONG).show();
-//        }else{
-//            Toast.makeText(getActivity(),"On Restore Not Null code id codition",Toast.LENGTH_LONG).show();
-//        }
-//    }
-//
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        codeID = ((TestTabActivity) getActivity()).getLastCode();
-//        if (codeID == null){
-//            Toast.makeText(getActivity(),"On Create Null code id codition",Toast.LENGTH_LONG).show();
-//        }else{
-//            Toast.makeText(getActivity(),"On Create Not Null code id codition",Toast.LENGTH_LONG).show();
-//        }
-//    }
-//
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        codeID = ((TestTabActivity) getActivity()).getLastCode();
-//        if (codeID == null){
-//            Toast.makeText(getActivity(),"On Start Null code id codition",Toast.LENGTH_LONG).show();
-//        }else{
-//            Toast.makeText(getActivity(),"On Start Not Null code id codition",Toast.LENGTH_LONG).show();
-//        }
-//    }
 
     @Override
     public void onResume() {
@@ -126,13 +70,11 @@ public class Tab3 extends Fragment{
 //        Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
 
         if (codeID == null){
-//            Toast.makeText(getActivity(),"On Resume Null code id codition",Toast.LENGTH_LONG).show();
             textView.setVisibility(View.VISIBLE);
             listPlace.setVisibility(View.GONE);
             listPlace.setAdapter(null);
         }
         else {
-//            Toast.makeText(getActivity(),"On Resume Not Null Condition",Toast.LENGTH_LONG).show();
             placeList.clear();
             textView.setVisibility(View.GONE);
             listPlace.setVisibility(View.VISIBLE);
@@ -171,7 +113,6 @@ public class Tab3 extends Fragment{
         /*JSON Request */
             adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
             adapterFavorPlace.notifyDataSetChanged();
-//            Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
 
             listPlace.setAdapter(adapterFavorPlace);
 

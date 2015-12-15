@@ -82,7 +82,6 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
     public static boolean mSignInClicked = false;
     public static String mGoogleCode = null;
 
-
     ProgressDialog progressDialog;
     CallbackManager callbackManager;
     AccessTokenTracker accessTokenTracker;
@@ -293,13 +292,13 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
-                            Toast.makeText(getApplicationContext(),"Data from Google Inserted Successful",Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(),"Data from Google Inserted Successful",Toast.LENGTH_SHORT).show();
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            Toast.makeText(getApplicationContext(), volleyError+"", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(), volleyError+"", Toast.LENGTH_SHORT).show();
                         }
                     }) {
                 @Override
@@ -473,6 +472,9 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                         userNameView.setText(json.getString("name"));
                         mEmail.setText(json.getString("email"));
                         profilePictureView.setProfileId(json.getString("id"));
+
+                        mGoogleCode = link;
+                        ((TestTabActivity) getActivity()).setLastCode(link);
                     }
 
                 } catch (JSONException e) {
@@ -485,13 +487,13 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                             @Override
                             public void onResponse(String s) {
 
-                                Toast.makeText(getApplicationContext(), "Data Inserted Successful", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Data Inserted Successful", Toast.LENGTH_SHORT).show();
                             }
                         },
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
-                                Toast.makeText(getApplicationContext(), volleyError + "", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), volleyError + "", Toast.LENGTH_SHORT).show();
                             }
                         }) {
                     @Override
@@ -506,8 +508,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 };
                 AppController.getInstance().addToRequestQueue(stringRequest);
             /*Finish JsonRequest*/
-                mGoogleCode = link;
-                ((TestTabActivity) getActivity()).setLastCode(link);
+
             }
         });
         Bundle parameters = new Bundle();

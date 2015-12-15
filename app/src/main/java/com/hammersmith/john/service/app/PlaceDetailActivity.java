@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,8 +37,10 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.adapter.PlaceRecyclerAdapter;
 import com.hammersmith.john.service.adapter.PlaceViewPager;
@@ -118,49 +121,50 @@ public class PlaceDetailActivity extends AppCompatActivity {
             mGoogleCode = Tab4.mGoogleCode;
 
             if (mSingInClicked){
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Constant.URL_DETECT_FAVOR_PLACE + mGoogleCode + "/" + placeID, null, new Response.Listener<JSONObject>() {
+                StringRequest request = new StringRequest(Request.Method.GET,Constant.URL_DETECT_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        try {
+                    public void onResponse(String s) {
+                        VolleyLog.d("String : %s",s);
+                        if ("\uFEFFsuccess".equals(s)){
                             fab.setImageResource(R.drawable.ic_favorite_white_48dp);
-                            String s = jsonObject.getString("msg");
-                            Toast.makeText(getApplicationContext(),"Added to Favorite",Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        }
+                        else if ("\uFEFFalready_have".equals(s)){
                             fab.setImageResource(R.drawable.heart);
-                            Toast.makeText(getApplicationContext(),"Already have ",Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_LONG).show();
                     }
                 });
                 AppController.getInstance().addToRequestQueue(request);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(),"Click : "+ mGoogleCode+" / "+placeID,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Click : "+ mGoogleCode+" / "+placeID,Toast.LENGTH_SHORT).show();
 //                    fab.setImageResource(R.drawable.heart);
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Constant.URL_ADD_FAVOR_PLACE + mGoogleCode + "/" + placeID, null, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             try {
-                                fab.setImageResource(R.drawable.heart);
                                 String s = jsonObject.getString("msg");
-                                Toast.makeText(getApplicationContext(),"Added to Favorite",Toast.LENGTH_SHORT).show();
+                                if ("\uFEFFinsert successful".equals(s)){
+                                    fab.setImageResource(R.drawable.heart);
+                                }else if ("\uFEFFalready have".equals(s)){
+                                    fab.setImageResource(R.drawable.heart);
+                                }
+//                                Toast.makeText(getApplicationContext(),"Added to Favorite",Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(getApplicationContext(),"Already have ",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(),"Already have ",Toast.LENGTH_SHORT).show();
 
                             }
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_SHORT).show();
                         }
                     });
                     AppController.getInstance().addToRequestQueue(request);
@@ -170,7 +174,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
             fab.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Long Click", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Long Click", Toast.LENGTH_SHORT).show();
                     fab.setImageResource(R.drawable.ic_favorite_white_48dp);
                     return true;
                 }
