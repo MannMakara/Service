@@ -179,7 +179,36 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 @Override
                 public boolean onLongClick(View v) {
 //                    Toast.makeText(getApplicationContext(), "Long Click", Toast.LENGTH_SHORT).show();
-                    fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+                    StringRequest deleteRequest = new StringRequest(Request.Method.GET, Constant.URL_DELETE_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+                            VolleyLog.d("String : %s",s);
+                            if ("\uFEFFsuccess".equals(s)){
+                                fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+                                Snackbar snackbar = Snackbar.make(mCoordinator,"Your Favorite was deleted!",Snackbar.LENGTH_INDEFINITE);
+                                // Changing action button text color
+                                View sbView = snackbar.getView();
+                                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                                textView.setTextColor(Color.YELLOW);
+                                snackbar.show();
+                            }
+                            else if ("\uFEFFnot_favorite_yet".equals(s)){
+                                fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+//                                Snackbar snackbar = Snackbar.make(mCoordinator,"It's already in your favorite box.",Snackbar.LENGTH_INDEFINITE);
+//                                // Changing action button text color
+//                                View sbView = snackbar.getView();
+//                                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+//                                textView.setTextColor(Color.YELLOW);
+//                                snackbar.show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+
+                        }
+                    });
+                    AppController.getInstance().addToRequestQueue(deleteRequest);
                     return true;
                 }
             });

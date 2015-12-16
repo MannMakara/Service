@@ -13,5 +13,6 @@ public class Constant {
     public static final String URL_LIST_FAVOR_PLACE = "http://g-ems.net/icambodia/index.php/place/favorite/";
     public static final String URL_ADD_FAVOR_PLACE = "http://g-ems.net/icambodia/index.php/favorite/";
     public static final String URL_DETECT_FAVOR_PLACE = "http://g-ems.net/icambodia/index.php/detec_favorite/";
+    public static final String URL_DELETE_FAVOR_PLACE = "http://g-ems.net/icambodia/index.php/place/delete/";
 
 }
