@@ -142,32 +142,36 @@ public class PlaceDetailActivity extends AppCompatActivity {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(),"Click : "+ mGoogleCode+" / "+placeID,Toast.LENGTH_SHORT).show();
-//                    fab.setImageResource(R.drawable.heart);
-                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Constant.URL_ADD_FAVOR_PLACE + mGoogleCode + "/" + placeID, null, new Response.Listener<JSONObject>() {
+                    StringRequest requestPost = new StringRequest(Request.Method.GET,Constant.URL_ADD_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
                         @Override
-                        public void onResponse(JSONObject jsonObject) {
-                            try {
-                                String s = jsonObject.getString("msg");
-                                if ("\uFEFFinsert successful".equals(s)){
-                                    fab.setImageResource(R.drawable.heart);
-                                }else if ("\uFEFFalready have".equals(s)){
-                                    fab.setImageResource(R.drawable.heart);
-                                }
-//                                Toast.makeText(getApplicationContext(),"Added to Favorite",Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-//                                Toast.makeText(getApplicationContext(),"Already have ",Toast.LENGTH_SHORT).show();
-
+                        public void onResponse(String s) {
+                            VolleyLog.d("String : %s",s);
+                            if ("\uFEFFsuccess".equals(s)){
+                                fab.setImageResource(R.drawable.heart);
+                                Snackbar snackbar = Snackbar.make(mCoordinator,"Added to list favorite",Snackbar.LENGTH_INDEFINITE);
+                                // Changing action button text color
+                                View sbView = snackbar.getView();
+                                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                                textView.setTextColor(Color.YELLOW);
+                                snackbar.show();
+                            }
+                            else if ("\uFEFFalready_have".equals(s)){
+                                fab.setImageResource(R.drawable.heart);
+                                Snackbar snackbar = Snackbar.make(mCoordinator,"It's already in your favorite box.",Snackbar.LENGTH_INDEFINITE);
+                                // Changing action button text color
+                                View sbView = snackbar.getView();
+                                TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+                                textView.setTextColor(Color.YELLOW);
+                                snackbar.show();
                             }
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-//                            Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_LONG).show();
                         }
                     });
-                    AppController.getInstance().addToRequestQueue(request);
+                    AppController.getInstance().addToRequestQueue(requestPost);
                 }
             });
 

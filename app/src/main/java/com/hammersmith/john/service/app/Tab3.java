@@ -36,7 +36,13 @@ import utils.Constant;
 /**
  * Created by John on 8/24/2015.
  */
-public class Tab3 extends Fragment{
+public class Tab3 extends Fragment {
+
+    public void updateCode(String newValue) {
+        Log.d("Tab3", "Code:" + newValue);
+        codeID = newValue;
+    }
+
     ListView listPlace;
     TextView textView;
 
@@ -65,16 +71,21 @@ public class Tab3 extends Fragment{
     public void onResume() {
         super.onResume();
 
-        codeID = ((TestTabActivity) getActivity()).getLastCode();
+//        codeID = ((TestTabActivity) getActivity()).getLastCode();
 
 //        Toast.makeText(getActivity(), codeID, Toast.LENGTH_SHORT).show();
+        if (!this.isAdded()){
+            return;
+        }
+        else {
+            codeID = ((TestTabActivity) getActivity()).getLastCode();
+        }
 
-        if (codeID == null){
+        if (codeID == null) {
             textView.setVisibility(View.VISIBLE);
             listPlace.setVisibility(View.GONE);
             listPlace.setAdapter(null);
-        }
-        else {
+        } else {
             placeList.clear();
             textView.setVisibility(View.GONE);
             listPlace.setVisibility(View.VISIBLE);
