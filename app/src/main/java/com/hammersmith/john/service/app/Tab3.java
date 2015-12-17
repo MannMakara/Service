@@ -62,11 +62,6 @@ public class Tab3 extends Fragment {
         return v;
     }
 
-    public void updateCode(String newValue) {
-        Log.d("Tab3", "Code:" + newValue);
-        codeID = newValue;
-    }
-
     @Override
     public void onResume() {
         super.onResume();

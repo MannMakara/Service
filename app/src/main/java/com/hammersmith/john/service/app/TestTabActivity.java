@@ -50,15 +50,12 @@ public class TestTabActivity extends FragmentActivity {
 
     String code;
 
-    private Tab3 tab3;
-
     public String getLastCode() {
         return this.code;
     }
 
     public void setLastCode(String newValue) {
         this.code = newValue;
-        ((Tab3)tab3).updateCode(newValue);
     }
 
     ViewPager pager;
@@ -71,8 +68,6 @@ public class TestTabActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_tab);
-
-        tab3 = new Tab3();
 
         recentSuggestions = new SearchRecentSuggestions(this,SuggestionProvider.AUTHORITY,SuggestionProvider.MODE);
         // Associate searchable configuration with the SearchView
