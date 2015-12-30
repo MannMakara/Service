@@ -66,9 +66,10 @@ public class PlaceRecyclerAdapter extends RecyclerView.Adapter<PlaceRecyclerAdap
             public void onResponse(JSONObject jsonObject) {
                 try {
                     holder.txtDetail.setText(Html.fromHtml(jsonObject.getString("customer_desc")));
-                    holder.txtFee.setText(jsonObject.getString("fee"));
+//                    holder.txtFee.setText(jsonObject.getString("fee"));
                     holder.txtMail.setText(jsonObject.getString("email"));
-                    holder.txtPhone.setText(jsonObject.getString("phone"));
+                    holder.txtPhone.setText(jsonObject.getString("work_number"));
+                    holder.txtPhone2.setText(jsonObject.getString("mobile_number"));
                     holder.txtWeb.setText(jsonObject.getString("website"));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -90,7 +91,7 @@ public class PlaceRecyclerAdapter extends RecyclerView.Adapter<PlaceRecyclerAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
-        TextView txtDetail,txtPhone,txtWeb,txtMail,txtFee;
+        TextView txtDetail,txtPhone,txtWeb,txtMail,txtFee,txtPhone2;
         ImageView imgPhone,imgWeb,imgMail,imgLocate;
         Button btnBookMe;
         TableRow trCall;
@@ -103,18 +104,11 @@ public class PlaceRecyclerAdapter extends RecyclerView.Adapter<PlaceRecyclerAdap
             mContext = context;
             txtDetail = (TextView) itemView.findViewById(R.id.detail);
             txtPhone = (TextView) itemView.findViewById(R.id.txtPhone);
+            txtPhone2 = (TextView) itemView.findViewById(R.id.txtPhone2);
             txtMail = (TextView) itemView.findViewById(R.id.txtMail);
             txtWeb = (TextView) itemView.findViewById(R.id.txtWeb);
-            txtFee = (TextView) itemView.findViewById(R.id.txtFee);
+//            txtFee = (TextView) itemView.findViewById(R.id.txtFee);
 
-            imgPhone = (ImageView) itemView.findViewById(R.id.imgPhone);
-            imgMail = (ImageView) itemView.findViewById(R.id.imgMail);
-            imgWeb = (ImageView) itemView.findViewById(R.id.imgWeb);
-//            imgLocate = (ImageView) itemView.findViewById(R.id.imgLocate);
-
-            trCall = (TableRow) itemView.findViewById(R.id.call);
-
-            btnBookMe = (Button) itemView.findViewById(R.id.btnBookMe);
 
             mapView = (MapView) itemView.findViewById(R.id.map);
 

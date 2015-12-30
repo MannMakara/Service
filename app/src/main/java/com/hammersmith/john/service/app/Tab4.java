@@ -281,7 +281,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             mEmail.setText(emailGoogle);
             Picasso.with(getActivity()).load(personPhotoUri).into(googlePro);
 
-            ((TestTabActivity) getActivity()).setLastCode(personID);
+//            ((TestTabActivity) getActivity()).setLastCode(personID);
 
             // Send to Place Detail Activity
 
@@ -474,7 +474,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                         profilePictureView.setProfileId(json.getString("id"));
 
                         mGoogleCode = link;
-                        ((TestTabActivity) getActivity()).setLastCode(link);
+//                        ((TestTabActivity) getActivity()).setLastCode(link);
                     }
 
                 } catch (JSONException e) {

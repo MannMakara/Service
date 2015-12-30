@@ -116,8 +116,8 @@ public class TestTabActivity extends FragmentActivity {
         String query = String.valueOf(extras.get(SearchManager.QUERY));
 
         recentSuggestions.saveRecentQuery(query, null);
-        Toast.makeText(this, "query: " + query + " user_query: " + userQuery,
-                Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "query: " + query + " user_query: " + userQuery,
+//                Toast.LENGTH_SHORT).show();
         searchView.setQuery(query, false); // leave query text in SearchView
 
         Intent newActivity = new Intent(this,SearchActivity.class);

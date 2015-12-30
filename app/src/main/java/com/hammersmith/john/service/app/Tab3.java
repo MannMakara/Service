@@ -66,7 +66,10 @@ public class Tab3 extends Fragment {
     public void onResume() {
         super.onResume();
 
-        codeID = ((TestTabActivity) getActivity()).getLastCode();
+//        codeID = ((TestTabActivity) getActivity()).getLastCode();
+
+
+        codeID = Tab4.mGoogleCode;
 
         if (codeID == null) {
             textView.setVisibility(View.VISIBLE);
