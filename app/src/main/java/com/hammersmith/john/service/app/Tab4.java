@@ -288,7 +288,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             mGoogleCode = personID;
 
             // [UPLOAD data to Server Via Json]
-            StringRequest gooleRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
+            StringRequest googleRequest = new StringRequest(Request.Method.POST, Constant.URL_POST,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
@@ -312,7 +312,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 }
             };
 
-            AppController.getInstance().addToRequestQueue(gooleRequest);
+            AppController.getInstance().addToRequestQueue(googleRequest);
             // [END Upload]
             updateUI(true);
         } else {

@@ -75,12 +75,13 @@ public class Tab3 extends Fragment {
             textView.setVisibility(View.VISIBLE);
             listPlace.setVisibility(View.GONE);
             listPlace.setAdapter(null);
-        } else {
-            placeList.clear();
-            textView.setVisibility(View.GONE);
-            listPlace.setVisibility(View.VISIBLE);
-            /*JSON Request */
+        }
+        else {
             if (placeList.size() <= 0) {
+                placeList.clear();
+                textView.setVisibility(View.GONE);
+                listPlace.setVisibility(View.VISIBLE);
+                /*JSON Request */
                 JsonArrayRequest favorReq = new JsonArrayRequest(Constant.URL_LIST_FAVOR_PLACE + codeID, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
@@ -110,6 +111,10 @@ public class Tab3 extends Fragment {
                 });
 
                 AppController.getInstance().addToRequestQueue(favorReq);
+            }
+            else if (placeList.size() == 0){
+                textView.setVisibility(View.VISIBLE);
+                listPlace.setVisibility(View.GONE);
             }
         /*JSON Request */
             adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
