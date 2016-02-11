@@ -21,7 +21,7 @@
   style="@style/RtlOverlay.Widget.AppCompat.Search.DropDown"
   android:layout_width="match_parent"
   android:layout_height="58dip"
-  android:background="@color/white" >
+  android:background="@color/icons" >
 
   <!--
          Icons come first in the layout, since their placement doesn't depend on

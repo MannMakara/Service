@@ -1,5 +1,6 @@
 package com.hammersmith.john.service.app;
 
+import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.provider.SearchRecentSuggestions;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,10 +69,16 @@ public class TestTabActivity extends FragmentActivity {
     SearchView searchView;
     SearchRecentSuggestions recentSuggestions;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_tab);
+
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.primary_dark));
 
         recentSuggestions = new SearchRecentSuggestions(this,SuggestionProvider.AUTHORITY,SuggestionProvider.MODE);
         // Associate searchable configuration with the SearchView
@@ -75,10 +86,10 @@ public class TestTabActivity extends FragmentActivity {
 
         searchView = (SearchView) findViewById(R.id.search_view_widget);
         searchView.setFocusable(false);
-        searchView.setQueryHint("Search");
+        searchView.setQueryHint(getString(R.string.search_hint));
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-
+        searchAutoComplete.setHintTextColor(getResources().getColor(R.color.white));
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         adapter =  new ViewPagerAdapter(getSupportFragmentManager());
@@ -99,7 +110,7 @@ public class TestTabActivity extends FragmentActivity {
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.tabsScrollColor);
+                return getResources().getColor(R.color.primary_light);
             }
         });
 

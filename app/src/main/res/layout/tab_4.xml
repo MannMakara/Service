@@ -18,7 +18,7 @@
         android:text="ICAMBODIA"
         android:textSize="50dp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/icons"
         android:gravity="center"
         android:id="@+id/title_name"
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
         android:textSize="20dp"
         android:freezesText="true"
         android:textStyle="bold"
-        android:textColor="@color/white" />
+        android:textColor="@color/icons" />
 
     <LinearLayout
         android:gravity="bottom"

@@ -23,8 +23,9 @@
 
     <string name="facebook_id">834107703399587</string>
 
-    <string name="search_hint">Search</string>
+    <!--<string name="search_hint">Search</string>-->
     <string name="title_activity_search">SearchActivity</string>
     <string name="booking">Book by Phone</string>
+    <string name="search_hint">Search</string>
 
 </resources>
