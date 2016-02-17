@@ -66,9 +66,6 @@ public class Tab3 extends Fragment {
     public void onResume() {
         super.onResume();
 
-//        codeID = ((TestTabActivity) getActivity()).getLastCode();
-
-
         codeID = Tab4.mGoogleCode;
 
         if (codeID == null) {
@@ -77,51 +74,43 @@ public class Tab3 extends Fragment {
             listPlace.setAdapter(null);
         }
         else {
-            if (placeList.size() <= 0) {
-                placeList.clear();
-                textView.setVisibility(View.GONE);
-                listPlace.setVisibility(View.VISIBLE);
-                /*JSON Request */
-                JsonArrayRequest favorReq = new JsonArrayRequest(Constant.URL_LIST_FAVOR_PLACE + codeID, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray jsonArray) {
-                        placeID = new String[jsonArray.length()];
-                        titile = new String[jsonArray.length()];
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            try {
-                                JSONObject object = jsonArray.getJSONObject(i);
-                                place = new Place();
-                                place.setName(object.getString("customer_name"));
-                                place.setAddress(object.getString("address"));
-                                place.setImage(Constant.URL_HOME + object.getString("logo_path"));
-                                placeList.add(place);
-                                placeID[i] = object.getString("place_id");
-                                titile[i] = object.getString("customer_name");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+            placeList.clear();
+            textView.setVisibility(View.GONE);
+            listPlace.setVisibility(View.VISIBLE);
+            //[JSON Array Request]//
+            JsonArrayRequest favorReq = new JsonArrayRequest(Constant.URL_LIST_FAVOR_PLACE + codeID, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray jsonArray) {
+                    placeID = new String[jsonArray.length()];
+                    titile = new String[jsonArray.length()];
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        try {
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            place = new Place();
+                            place.setName(object.getString("customer_name"));
+                            place.setAddress(object.getString("address"));
+                            place.setImage(Constant.URL_HOME + object.getString("logo_path"));
+                            placeList.add(place);
+                            placeID[i] = object.getString("place_id");
+                            titile[i] = object.getString("customer_name");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         adapterFavorPlace.notifyDataSetChanged();
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
 
-                    }
-                });
+                }
+            });
+            AppController.getInstance().addToRequestQueue(favorReq);
+            //[End Request]//
 
-                AppController.getInstance().addToRequestQueue(favorReq);
-            }
-            else if (placeList.size() == 0){
-                textView.setVisibility(View.VISIBLE);
-                listPlace.setVisibility(View.GONE);
-            }
-        /*JSON Request */
             adapterFavorPlace = new CustomAdapterPlace(getActivity(), placeList);
             adapterFavorPlace.notifyDataSetChanged();
-
             listPlace.setAdapter(adapterFavorPlace);
-
             listPlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -131,9 +120,7 @@ public class Tab3 extends Fragment {
                     startActivity(intent);
                 }
             });
-
         }
-
     }
-
 }
+

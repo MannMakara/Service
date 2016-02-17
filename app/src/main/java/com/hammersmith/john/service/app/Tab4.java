@@ -126,7 +126,11 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
                 //[START Request DATA]
                 mSignInClicked = true;
                 RequestData();
+                mGoogleCode = loginResult.getAccessToken().getUserId();
                 //[END Request DATA]
+            }
+            else{
+                mGoogleCode = null;
             }
         }
 
@@ -188,9 +192,10 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
         googlePro = (ImageView) v.findViewById(R.id.googleProfile);
         mEmail = (TextView) v.findViewById(R.id.email);
         txtTitle = (TextView) v.findViewById(R.id.title_name);
-        Typeface font = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Gasalt-Regular.ttf");
+        Typeface font = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Mistral.ttf");
         txtTitle.setTypeface(font);
-        mEmail.setTypeface(font);
+        Typeface font1 = Typeface.createFromAsset(getActivity().getAssets(),"fonts/Roboto-Italic.ttf");
+        mEmail.setTypeface(font1);
         /*Set TypeFace*/
         userNameView = (TextView) v.findViewById(R.id.profileUserName);
         profilePictureView = (ProfilePictureView) v.findViewById(R.id.profilePic);
@@ -388,6 +393,7 @@ public class Tab4 extends Fragment implements View.OnClickListener, GoogleApiCli
             mEmail.setText("");
             profilePictureView.setVisibility(View.GONE);
             button.setVisibility(View.VISIBLE);
+            getActivity().recreate();
         }
     }
 

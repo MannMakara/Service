@@ -28,6 +28,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableRow;
@@ -64,10 +66,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     //Need this to set the title of the app bar
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
     private Toolbar mToolbar;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
     private ViewPager mPager;
-    private TabLayout mTabLayout;
 
     String detail_place_title;
 
@@ -90,9 +89,14 @@ public class PlaceDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_detail);
+
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.primary_dark));
+
         mCoordinator = (CoordinatorLayout) findViewById(R.id.root_coordinator);
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
 
         img = (ImageView) findViewById(R.id.img_place);
@@ -107,8 +111,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
         mPager = (ViewPager) findViewById(R.id.view_pager);
         mPager.setAdapter(mAdapter);
 
-        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+//        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+//        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
         detail_place_title = getIntent().getStringExtra("title");
         placeID = Integer.parseInt(getIntent().getStringExtra("id"));
