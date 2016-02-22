@@ -89,7 +89,7 @@ public class Tab3 extends Fragment {
                             place = new Place();
                             place.setName(object.getString("customer_name"));
                             place.setAddress(object.getString("address"));
-                            place.setImage(Constant.URL_HOME + object.getString("logo_path"));
+                            place.setImage(Constant.URL_INDEX + object.getString("logo_path"));
                             placeList.add(place);
                             placeID[i] = object.getString("place_id");
                             titile[i] = object.getString("customer_name");

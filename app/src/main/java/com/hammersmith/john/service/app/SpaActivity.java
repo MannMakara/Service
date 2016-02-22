@@ -1,5 +1,6 @@
 package com.hammersmith.john.service.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,9 @@ import java.util.List;
 import utils.Constant;
 
 public class SpaActivity extends AppCompatActivity {
+
+
+    ProgressDialog progressDialog;
     ListView listView;
     CustomAdapterCity adapterCity;
     List<City> cityList = new ArrayList<City>();
@@ -67,18 +71,19 @@ public class SpaActivity extends AppCompatActivity {
         });
 
         if (cityList.size() <= 0){
-
+            showProgress();
             // Creating volley request obj
             JsonArrayRequest cityReq = new JsonArrayRequest(Constant.URL_CITY, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray jsonArray) {
+                    hideProgress();
                     id = new int[jsonArray.length()];
                     title = new String[jsonArray.length()];
                     for (int i=0; i< jsonArray.length() ; i++) {
                         try {
                             JSONObject obj = jsonArray.getJSONObject(i);
                             city = new City();
-                            city.setImage(obj.getString("image_city"));
+                            city.setImage(Constant.URL_INDEX + obj.getString("image_city"));
                             city.setName(obj.getString("city_name"));
                             id[i] = obj.getInt("id");
                             title[i] = obj.getString("city_name");
@@ -123,5 +128,21 @@ public class SpaActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showProgress() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading...");
+        }
+
+        progressDialog.show();
+    }
+
+    private void hideProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

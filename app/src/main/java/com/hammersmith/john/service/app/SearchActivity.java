@@ -77,7 +77,7 @@ public class SearchActivity extends AppCompatActivity {
                             place = new Place();
                             place.setName(obj.getString("customer_name"));
                             place.setAddress(obj.getString("address"));
-                            place.setImage(obj.getString("logo_path"));
+                            place.setImage(Constant.URL_INDEX + obj.getString("logo_path"));
                             place_id[i] = obj.getString("id");
                             place_title[i] = obj.getString("customer_name");
                             placeList.add(place);

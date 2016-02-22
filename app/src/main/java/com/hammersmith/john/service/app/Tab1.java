@@ -1,5 +1,6 @@
 package com.hammersmith.john.service.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -43,6 +44,8 @@ import utils.Constant;
  * Created by John on 8/24/2015.
  */
 public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener{
+
+    ProgressDialog progressDialog;
     ViewFlipper viewFlipper;
     GestureDetector mGestureDetector;
     TextView hotel;
@@ -97,17 +100,19 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener{
         // ********** Recycler View ****************//
 
         if (categories.size() <= 0){
+            showProgress();
             // Creating volley request obj
             JsonArrayRequest cateReq = new JsonArrayRequest(Constant.URL_CATEGORY, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray jsonArray) {
+                    hideProgress();
                     id = new int[jsonArray.length()];
                     title = new String[jsonArray.length()];
                     for (int i=0; i< jsonArray.length() ; i++) {
                         try {
                             JSONObject obj = jsonArray.getJSONObject(i);
                             cate = new Category();
-                            cate.setImage(obj.getString("image_path"));
+                            cate.setImage(Constant.URL_INDEX + obj.getString("image_path"));
                             cate.setName(obj.getString("category_name"));
                             id[i] = obj.getInt("id");
                             title[i] = obj.getString("category_name");
@@ -211,6 +216,22 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener{
                 viewFlipper.showPrevious();
             }
             return super.onFling(e1, e2, velocityX, velocityY);
+        }
+    }
+
+    private void showProgress() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading...");
+        }
+
+        progressDialog.show();
+    }
+
+    private void hideProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 }

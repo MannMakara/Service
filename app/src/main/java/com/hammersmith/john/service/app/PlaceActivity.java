@@ -1,5 +1,6 @@
 package com.hammersmith.john.service.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import java.util.List;
 import utils.Constant;
 
 public class PlaceActivity extends AppCompatActivity {
+
+
+    ProgressDialog progressDialog;
 
     CustomAdapterPlace adapterPlace;
     List<Place> placeList = new ArrayList<Place>();
@@ -67,20 +71,22 @@ public class PlaceActivity extends AppCompatActivity {
         });
 
         if (placeList.size() <= 0){
-
+            showProgress();
             JsonArrayRequest placeReq = new JsonArrayRequest(Constant.URL_PLACE + place_url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray jsonArray) {
+                    hideProgress();
                     place_id = new String[jsonArray.length()];
                     place_title = new String[jsonArray.length()];
 //                    Toast.makeText(getApplicationContext(),"Json Request "+jsonArray.length(),Toast.LENGTH_SHORT).show();
+
                     for (int i=0 ; i < jsonArray.length() ; i++){
                         try {
                             JSONObject object = jsonArray.getJSONObject(i);
                             place = new Place();
                             place.setName(object.getString("customer_name"));
                             place.setAddress(object.getString("address"));
-                            place.setImage(Constant.URL_HOME + object.getString("logo_path"));
+                            place.setImage(Constant.URL_INDEX + object.getString("logo_path"));
                             place_id[i] = object.getString("id");
                             place_title[i] = object.getString("customer_name");
                             placeList.add(place);
@@ -108,5 +114,21 @@ public class PlaceActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showProgress() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading...");
+        }
+
+        progressDialog.show();
+    }
+
+    private void hideProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }
