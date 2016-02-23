@@ -62,6 +62,7 @@ public class SearchActivity extends AppCompatActivity {
         });
 
         /*JsonArrayRequest for Search*/
+        actionBarName = actionBarName.replaceAll(" ","_").toLowerCase();
         if (placeList.size() <=0) {
             JsonArrayRequest searchReq = new JsonArrayRequest(Constant.URL_SEARCH + actionBarName, new Response.Listener<JSONArray>() {
                 @Override

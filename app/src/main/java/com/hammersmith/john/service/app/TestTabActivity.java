@@ -126,13 +126,13 @@ public class TestTabActivity extends FragmentActivity {
         String userQuery = String.valueOf(extras.get(SearchManager.USER_QUERY));
         String query = String.valueOf(extras.get(SearchManager.QUERY));
 
-        recentSuggestions.saveRecentQuery(userQuery, null);
+        recentSuggestions.saveRecentQuery(query, null);
 //        Toast.makeText(this, "query: " + query + " user_query: " + userQuery,
 //                Toast.LENGTH_SHORT).show();
-        searchView.setQuery(userQuery, false); // leave query text in SearchView
+        searchView.setQuery(query, false); // leave query text in SearchView
 
         Intent newActivity = new Intent(this,SearchActivity.class);
-        newActivity.putExtra("title", userQuery);
+        newActivity.putExtra("title", query);
         startActivity(newActivity);
 
     }
