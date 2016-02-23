@@ -1,158 +1,115 @@
 package com.hammersmith.john.service.app;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Icon;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.text.Html;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.hammersmith.john.service.R;
-import com.hammersmith.john.service.adapter.PlaceRecyclerAdapter;
-import com.hammersmith.john.service.adapter.PlaceViewPager;
 import com.hammersmith.john.service.controller.AppController;
 import com.hammersmith.john.service.model.Place;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 import utils.Constant;
 
-public class PlaceDetailActivity extends AppCompatActivity {
-
-    // Need this to link with the Snackbar
-    private CoordinatorLayout mCoordinator;
-    //Need this to set the title of the app bar
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
-    private Toolbar mToolbar;
-    private ViewPager mPager;
+public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     String detail_place_title;
 
     public static int placeID;
-
-    ImageView img;
-
-    /*New Adapter*/
-
-    private PlaceViewPager mAdapter;
     public static Place place;
-
-
-    FloatingActionButton fab;
-
     private boolean mSingInClicked = false;
     private String mGoogleCode = null;
+    FloatingActionButton fab;
+
+    TextView txtDetail,txtPhone,txtWeb,txtMail,txtPhone2;
+    MapView mapView;
+    GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_detail);
+        setContentView(R.layout.activity_scrolling);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(this.getResources().getColor(R.color.primary_dark));
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        txtDetail = (TextView) findViewById(R.id.detail);
+        txtPhone = (TextView) findViewById(R.id.txtPhone);
+        txtPhone2 = (TextView) findViewById(R.id.txtPhone2);
+        txtMail = (TextView) findViewById(R.id.txtMail);
+        txtWeb = (TextView) findViewById(R.id.txtWeb);
 
-        mCoordinator = (CoordinatorLayout) findViewById(R.id.root_coordinator);
-        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
-        mToolbar = (Toolbar) findViewById(R.id.app_bar);
 
-        img = (ImageView) findViewById(R.id.img_place);
+        mapView = (MapView) findViewById(R.id.map);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        setSupportActionBar(mToolbar);
-
-//        img.setImageResource(R.drawable.sokha); // can add Image here
-
-        mAdapter = new PlaceViewPager(getSupportFragmentManager());
-        mPager = (ViewPager) findViewById(R.id.view_pager);
-        mPager.setAdapter(mAdapter);
-
-//        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-//        mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        mapView.onCreate(null);
+        mapView.getMapAsync(this);
 
         detail_place_title = getIntent().getStringExtra("title");
         placeID = Integer.parseInt(getIntent().getStringExtra("id"));
+        
+        collapsingToolbar.setTitle(detail_place_title);
 
-        mCollapsingToolbarLayout.setTitle(detail_place_title);
-
-        //Floating Action Button
-
-            mSingInClicked = Tab4.mSignInClicked;
-            mGoogleCode = Tab4.mGoogleCode;
-
-            if (mSingInClicked){
-                StringRequest request = new StringRequest(Request.Method.GET,Constant.URL_DETECT_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        VolleyLog.d("String : %s",s);
-                        if ("\uFEFFsuccess".equals(s)){
-                            fab.setImageResource(R.drawable.ic_favorite_white_48dp);
-                        }
-                        else if ("\uFEFFalready_have".equals(s)){
-                            fab.setImageResource(R.drawable.heart);
-                        }
+        mSingInClicked = Tab4.mSignInClicked;
+        mGoogleCode = Tab4.mGoogleCode;
+        
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (mSingInClicked){
+            StringRequest request = new StringRequest(Request.Method.GET, Constant.URL_DETECT_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String s) {
+                    VolleyLog.d("String : %s",s);
+                    if ("\uFEFFsuccess".equals(s)){
+                        fab.setImageResource(R.drawable.ic_favorite_white_48dp);
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
+                    else if ("\uFEFFalready_have".equals(s)){
+                        fab.setImageResource(R.drawable.heart);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
 //                        Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_LONG).show();
-                    }
-                });
-                AppController.getInstance().addToRequestQueue(request);
+                }
+            });
+            AppController.getInstance().addToRequestQueue(request);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(final View v) {
                     StringRequest requestPost = new StringRequest(Request.Method.GET,Constant.URL_ADD_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {
                             VolleyLog.d("String : %s",s);
                             if ("\uFEFFsuccess".equals(s)){
                                 fab.setImageResource(R.drawable.heart);
-                                Snackbar snackbar = Snackbar.make(mCoordinator,"Added to list favorite",Snackbar.LENGTH_INDEFINITE);
+                                Snackbar snackbar = Snackbar.make(v,"Added to list favorite",Snackbar.LENGTH_INDEFINITE);
                                 // Changing action button text color
                                 View sbView = snackbar.getView();
                                 TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
@@ -161,7 +118,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                             }
                             else if ("\uFEFFalready_have".equals(s)){
                                 fab.setImageResource(R.drawable.heart);
-                                Snackbar snackbar = Snackbar.make(mCoordinator,"It's already in your favorite box.",Snackbar.LENGTH_INDEFINITE);
+                                Snackbar snackbar = Snackbar.make(v,"It's already in your favorite box.",Snackbar.LENGTH_INDEFINITE);
                                 // Changing action button text color
                                 View sbView = snackbar.getView();
                                 TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
@@ -181,7 +138,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
             fab.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public boolean onLongClick(final View v) {
 //                    Toast.makeText(getApplicationContext(), "Long Click", Toast.LENGTH_SHORT).show();
                     StringRequest deleteRequest = new StringRequest(Request.Method.GET, Constant.URL_DELETE_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
                         @Override
@@ -189,7 +146,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                             VolleyLog.d("String : %s",s);
                             if ("\uFEFFsuccess".equals(s)){
                                 fab.setImageResource(R.drawable.ic_favorite_white_48dp);
-                                Snackbar snackbar = Snackbar.make(mCoordinator,"Your Favorite was deleted!",Snackbar.LENGTH_INDEFINITE);
+                                Snackbar snackbar = Snackbar.make(v,"Your Favorite was deleted!",Snackbar.LENGTH_INDEFINITE);
                                 // Changing action button text color
                                 View sbView = snackbar.getView();
                                 TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
@@ -216,13 +173,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
                     return true;
                 }
             });
-        }
-        else {
-                fab.setImageResource(R.drawable.ic_favorite_white_48dp);
+        } else {
+            fab.setImageResource(R.drawable.ic_favorite_white_48dp);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Snackbar snackbar = Snackbar.make(mCoordinator,"Please Log In",Snackbar.LENGTH_INDEFINITE);
+                    Snackbar snackbar = Snackbar.make(v,"Please Log In",Snackbar.LENGTH_INDEFINITE);
                     // Changing action button text color
                     View sbView = snackbar.getView();
                     TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
@@ -231,36 +187,39 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 }
             });
         }
+        /*JsonObjectRequest*/
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constant.URL_PLACE + placeID, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                try {
+                    txtDetail.setText(Html.fromHtml(jsonObject.getString("customer_desc")));
+                    txtMail.setText(jsonObject.getString("email"));
+                    txtPhone.setText(jsonObject.getString("work_number"));
+                    txtPhone2.setText(jsonObject.getString("mobile_number"));
+                    txtWeb.setText(jsonObject.getString("website"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+            }
+        });
 
-
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
+            /*JsonObjectRequest*/
     }
 
-    public static class MyFragment extends Fragment {
-        public static final java.lang.String ARG_PAGE = "arg_page";
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
 
-        public MyFragment() {
+        MapsInitializer.initialize(getApplicationContext());
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        }
-
-        public static MyFragment newInstance(int pageNumber) {
-            MyFragment myFragment = new MyFragment();
-            Bundle arguments = new Bundle();
-            arguments.putInt(ARG_PAGE, pageNumber + 1);
-            myFragment.setArguments(arguments);
-            return myFragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//            int id_detail = PlaceDetailActivity.placeID;
-            place = new Place();
-
-//            Bundle arguments = getArguments();
-            RecyclerView recyclerView = new RecyclerView(getActivity());
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(new PlaceRecyclerAdapter(getActivity()));
-            return recyclerView;
-        }
+        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(11.570937,104.937177)));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(11.570937,104.937177),16f);
+        mGoogleMap.moveCamera(cameraUpdate);
     }
-
 }

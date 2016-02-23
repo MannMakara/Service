@@ -33,7 +33,7 @@ public class SearchActivity extends AppCompatActivity {
     String actionBarName;
     ListView listView;
     CustomAdapterPlace adapterPlace;
-    List<Place> placeList = new ArrayList<Place>();
+    List<Place> placeList = new ArrayList<>();
     Place place;
     String[] place_id;
     String[] place_title;
@@ -54,7 +54,7 @@ public class SearchActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id1) {
-                Intent intent = new Intent(getApplicationContext(), PlaceDetailActivity.class);
+                Intent intent = new Intent(getApplicationContext(), ScrollingActivity.class);
                 intent.putExtra("id", place_id[position]);
                 intent.putExtra("title", place_title[position]);
                 startActivity(intent);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hammersmith.john.service" >
+    package="com.hammersmith.john.service">
 
     <permission
         android:name="com.hammersmith.john.googlemaptesting.permission.MAPS_RECEIVE"
@@ -25,47 +25,23 @@
         android:allowBackup="true"
         android:icon="@mipmap/icam"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".app.MainActivity"
-            android:label="@string/app_name" >
-        </activity>
-
-        <activity
-            android:screenOrientation="portrait"
             android:name=".app.SpaActivity"
             android:label="@string/title_activity_spa"
-            android:parentActivityName=".app.MainActivity" >
+            android:parentActivityName=".app.TestTabActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".app.MainActivity" />
-        </activity>
-
-        <activity
-            android:name=".app.RestaActivity"
-            android:label="@string/title_activity_resta"
-            android:parentActivityName=".app.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".app.MainActivity" />
-        </activity>
-
-        <activity
-            android:name=".app.HotelActivity"
-            android:label="@string/title_activity_hotel"
-            android:parentActivityName=".app.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".app.MainActivity" />
+                android:value=".app.TestTabActivity" />
         </activity>
         <activity
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustNothing"
             android:name=".app.TestTabActivity"
             android:label="@string/title_activity_test_tab"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.MyTheme.Light.NoActionBar" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyTheme.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -93,23 +69,13 @@
             android:value="AIzaSyAsnOq6pDyKfESxuTQ4KeJahgF5G7oZEN0" />
 
         <activity
-            android:screenOrientation="portrait"
             android:name=".app.PlaceActivity"
             android:label="@string/title_activity_place"
-            android:parentActivityName=".app.SpaActivity" >
+            android:parentActivityName=".app.SpaActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hammersmith.john.service.app.SpaActivity" />
-        </activity>
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".app.PlaceDetailActivity"
-            android:label="@string/title_activity_place_detail"
-            android:parentActivityName=".app.PlaceActivity"
-            android:theme="@style/Theme.MyTheme.Light.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hammersmith.john.service.app.PlaceActivity" />
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -127,11 +93,15 @@
         <activity
             android:name=".app.SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName=".app.TestTabActivity" >
+            android:parentActivityName=".app.TestTabActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hammersmith.john.service.app.TestTabActivity" />
         </activity>
+        <activity
+            android:name=".app.ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

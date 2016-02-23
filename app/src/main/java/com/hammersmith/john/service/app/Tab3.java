@@ -33,16 +33,13 @@ import java.util.List;
 
 import utils.Constant;
 
-/**
- * Created by John on 8/24/2015.
- */
 public class Tab3 extends Fragment {
 
     ListView listPlace;
     TextView textView;
 
     CustomAdapterPlace adapterFavorPlace;
-    List<Place> placeList = new ArrayList<Place>();
+    List<Place> placeList = new ArrayList<>();
     Place place;
 
     String[] placeID;
@@ -114,7 +111,7 @@ public class Tab3 extends Fragment {
             listPlace.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(getActivity(), PlaceDetailActivity.class);
+                    Intent intent = new Intent(getActivity(), ScrollingActivity.class);
                     intent.putExtra("id", placeID[position]);
                     intent.putExtra("title", titile[position]);
                     startActivity(intent);
