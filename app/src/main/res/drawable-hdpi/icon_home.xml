@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!--When Selected use Red-->
     <item
-        android:drawable="@drawable/ic_action_home_red"
+        android:drawable="@drawable/ic_action_home_blue"
         android:state_selected="true"/>
 
     <!-- Not select use white-->

@@ -198,7 +198,7 @@ public class Tab2 extends Fragment implements OnMapReadyCallback,GoogleApiClient
         markerOptions.position(mLatLng);
         markerOptions.title("You are here");
         markerOptions.snippet(state+","+country);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocaMarker = mMap.addMarker(markerOptions);
 
         //zoom to current position:

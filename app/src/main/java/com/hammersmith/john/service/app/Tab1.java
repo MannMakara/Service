@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -68,7 +69,7 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener{
 
     List<Category> categories = new ArrayList<Category>();
     Category cate;
-    CustomAdapterCategory adapterCategory;
+//    CustomAdapterCategory adapterCategory;
 
     RecyclerAdapter adapter;
 
@@ -123,7 +124,7 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener{
                     }
                     // notifying list adapter about data changes
                     // so that it renders the list view with updated data
-//                adapterCategory.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -131,46 +132,13 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener{
                     Toast.makeText(getActivity(),volleyError+"",Toast.LENGTH_SHORT).show();
                 }
             });
+            cateReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS*2,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().addToRequestQueue(cateReq);
 
         }
 
 
         // Test //
-//        gridView = (GridView) v.findViewById(R.id.grid);
-//
-//        mPhotoSize = getResources().getDimensionPixelSize(R.dimen.photo_size);
-//        mPhotoSpacing = getResources().getDimensionPixelSize(R.dimen.photo_spacing);
-//        adapterCategory = new CustomAdapterCategory(getActivity(),categories);
-//        gridView.setAdapter(adapterCategory);
-//
-//        gridView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                if (adapterCategory.getNumColumns() == 0) {
-//                    final int numColumn = (int) Math.floor(gridView.getWidth() / (mPhotoSize + mPhotoSpacing));
-//                    if (numColumn > 0) {
-//                        final int columnWidth = (gridView.getWidth() / numColumn) - mPhotoSpacing;
-//                        adapterCategory.setNumColumns(numColumn);
-//                        adapterCategory.setItemHeight(columnWidth);
-//                    }
-//                }
-//            }
-//        });
-
-        // Finish //
-
-        // *** Click on postion *****//
-//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id1) {
-//                Intent intent = new Intent(getActivity(),SpaActivity.class);
-//                intent.putExtra("id",id[position]);
-//                Toast.makeText(getActivity(),"Position:"+id[position],Toast.LENGTH_LONG).show();
-//                startActivity(intent);
-//            }
-//        });
-        // *** Click on postion *****//
 
         for (int i = 0; i < re.length; i++) {
             ImageView imageView = new ImageView(getActivity());
@@ -193,8 +161,6 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener{
         Intent intent = new Intent(getActivity(),SpaActivity.class);
         intent.putExtra("id", id[position]+"");
         intent.putExtra("title",title[position]);
-//        Toast.makeText(getActivity(),"Position:"+id[position],Toast.LENGTH_SHORT).show();
-//        Toast.makeText(getActivity(),"Title:"+title[position],Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
 

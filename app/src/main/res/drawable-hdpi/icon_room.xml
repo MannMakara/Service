@@ -3,7 +3,7 @@
 
     <!--When Selected use Red-->
     <item
-        android:drawable="@drawable/ic_action_room_red"
+        android:drawable="@drawable/ic_action_room_blue"
         android:state_selected="true"/>
 
     <!-- Not select use white-->

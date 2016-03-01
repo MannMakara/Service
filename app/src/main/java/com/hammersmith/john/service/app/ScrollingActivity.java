@@ -9,9 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -48,6 +46,7 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
     FloatingActionButton fab;
 
     TextView txtDetail,txtPhone,txtWeb,txtMail,txtPhone2;
+    ImageView imageView;
     MapView mapView;
     GoogleMap mGoogleMap;
 
@@ -65,7 +64,7 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
         txtPhone2 = (TextView) findViewById(R.id.txtPhone2);
         txtMail = (TextView) findViewById(R.id.txtMail);
         txtWeb = (TextView) findViewById(R.id.txtWeb);
-
+        imageView = (ImageView) findViewById(R.id.backdrop);
 
         mapView = (MapView) findViewById(R.id.map);
 
@@ -96,7 +95,6 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-//                        Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_LONG).show();
                 }
             });
             AppController.getInstance().addToRequestQueue(request);
@@ -129,7 +127,6 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-//                        Toast.makeText(getApplicationContext(),volleyError+"",Toast.LENGTH_LONG).show();
                         }
                     });
                     AppController.getInstance().addToRequestQueue(requestPost);
@@ -139,7 +136,6 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
             fab.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(final View v) {
-//                    Toast.makeText(getApplicationContext(), "Long Click", Toast.LENGTH_SHORT).show();
                     StringRequest deleteRequest = new StringRequest(Request.Method.GET, Constant.URL_DELETE_FAVOR_PLACE + mGoogleCode + "/" + placeID, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String s) {

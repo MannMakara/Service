@@ -14,6 +14,9 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.adapter.CustomAdapterPlace;
 import com.hammersmith.john.service.controller.AppController;
@@ -43,6 +46,9 @@ public class PlaceActivity extends AppCompatActivity {
     String[] place_title;
     String actionBarName,place_url;
 
+    //**************** AdMob Ads Full Screen******************//
+    InterstitialAd interstitialAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,24 @@ public class PlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place);
         actionBarName = getIntent().getStringExtra("title");
         place_url = getIntent().getStringExtra("url");
+
+        //**************** AdMob Ads Full Screen******************//
+        interstitialAd = new InterstitialAd(this);
+        // set the ad unit ID
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("45E04C461D1C789565E42D371E40600A")
+                .build();
+        // Load ads into Interstitial Ads
+        interstitialAd.loadAd(adRequest);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                showInterstitial();
+            }
+        });
 
         getSupportActionBar().setTitle(actionBarName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -121,6 +145,7 @@ public class PlaceActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
         }
 
         progressDialog.show();
@@ -130,5 +155,10 @@ public class PlaceActivity extends AppCompatActivity {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    private void showInterstitial(){
+        if (interstitialAd.isLoaded())
+            interstitialAd.show();
     }
 }

@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="textAppearanceSearchResultTitle">@style/SearchResultTitle</item>
         <item name="textAppearanceSearchResultSubtitle">@style/SearchResultSubtitle</item>
-        <item name="colorAccent">#FF4081</item>
+        <item name="colorAccent">#1976D2</item>
     </style>
 
     <style name="Theme.MyTheme.Light.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
