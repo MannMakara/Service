@@ -103,7 +103,6 @@ public class SpaActivity extends AppCompatActivity {
                 }
             });
             AppController.getInstance().addToRequestQueue(cityReq);
-
         }
 
     }

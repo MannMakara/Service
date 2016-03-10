@@ -24,7 +24,7 @@
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp">
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:src="@drawable/sokhapic"
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"

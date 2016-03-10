@@ -16,7 +16,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,9 +46,11 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
     private boolean mSingInClicked = false;
     private String mGoogleCode = null;
     FloatingActionButton fab;
+    ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+    String imageURL;
 
     TextView txtDetail,txtPhone,txtWeb,txtMail,txtPhone2;
-    ImageView imageView;
+    NetworkImageView imageView;
     MapView mapView;
     GoogleMap mGoogleMap;
 
@@ -64,7 +68,7 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
         txtPhone2 = (TextView) findViewById(R.id.txtPhone2);
         txtMail = (TextView) findViewById(R.id.txtMail);
         txtWeb = (TextView) findViewById(R.id.txtWeb);
-        imageView = (ImageView) findViewById(R.id.backdrop);
+        imageView = (NetworkImageView) findViewById(R.id.backdrop);
 
         mapView = (MapView) findViewById(R.id.map);
 
@@ -193,6 +197,10 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
                     txtPhone.setText(jsonObject.getString("work_number"));
                     txtPhone2.setText(jsonObject.getString("mobile_number"));
                     txtWeb.setText(jsonObject.getString("website"));
+                    imageURL = Constant.URL_INDEX+jsonObject.getString("image");
+                    if (imageLoader == null)
+                        imageLoader = AppController.getInstance().getImageLoader();
+                    imageView.setImageUrl(imageURL,imageLoader);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
