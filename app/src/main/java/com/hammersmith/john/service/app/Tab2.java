@@ -45,18 +45,12 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by John on 8/24/2015.
- */
 public class Tab2 extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
-    private SupportMapFragment supportMapFragment;
     private static View view;
 
-    private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
-    private LatLng mLatLng;
     Marker mCurrLocaMarker;
 
     @Nullable
@@ -74,7 +68,7 @@ public class Tab2 extends Fragment implements OnMapReadyCallback, GoogleApiClien
             /* map is already there, just return view as it is */
         }
         FragmentManager fm = getChildFragmentManager();
-        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        SupportMapFragment supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
         if (supportMapFragment == null) {
             supportMapFragment = SupportMapFragment.newInstance();
             fm.beginTransaction().add(R.id.map, supportMapFragment).commit();
@@ -164,7 +158,7 @@ public class Tab2 extends Fragment implements OnMapReadyCallback, GoogleApiClien
 //            .title("New latlong"));
 //        }
 
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(5000); //5 seconds
         mLocationRequest.setFastestInterval(3000); //3 seconds
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -176,11 +170,10 @@ public class Tab2 extends Fragment implements OnMapReadyCallback, GoogleApiClien
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
             return;
         }
-
-
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
     @Override
@@ -190,7 +183,7 @@ public class Tab2 extends Fragment implements OnMapReadyCallback, GoogleApiClien
 
     @Override
     public void onLocationChanged(Location location) {
-        String city = null,state = null,country = null;
+        String state = null,country = null;
         //place marker at current position
         mMap.clear();
         if (mCurrLocaMarker != null) {
@@ -204,7 +197,7 @@ public class Tab2 extends Fragment implements OnMapReadyCallback, GoogleApiClien
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng mLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(mLatLng);
         markerOptions.title("You are here");

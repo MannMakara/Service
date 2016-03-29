@@ -1,6 +1,8 @@
 package com.hammersmith.john.service.app;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.controller.AppController;
 import com.hammersmith.john.service.model.Place;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +53,7 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
     String imageURL;
 
     TextView txtDetail,txtPhone,txtWeb,txtMail,txtPhone2;
-    NetworkImageView imageView;
+    ImageView imageView;
     MapView mapView;
     GoogleMap mGoogleMap;
 
@@ -68,7 +71,7 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
         txtPhone2 = (TextView) findViewById(R.id.txtPhone2);
         txtMail = (TextView) findViewById(R.id.txtMail);
         txtWeb = (TextView) findViewById(R.id.txtWeb);
-        imageView = (NetworkImageView) findViewById(R.id.backdrop);
+        imageView = (ImageView) findViewById(R.id.backdrop);
 
         mapView = (MapView) findViewById(R.id.map);
 
@@ -198,9 +201,11 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
                     txtPhone2.setText(jsonObject.getString("mobile_number"));
                     txtWeb.setText(jsonObject.getString("website"));
                     imageURL = Constant.URL_INDEX+jsonObject.getString("image");
-                    if (imageLoader == null)
-                        imageLoader = AppController.getInstance().getImageLoader();
-                    imageView.setImageUrl(imageURL,imageLoader);
+//                    if (imageLoader == null)
+//                        imageLoader = AppController.getInstance().getImageLoader();
+//                    imageView.setImageUrl(imageURL,imageLoader);
+                    Uri uri = Uri.parse(imageURL);
+                    Picasso.with(getApplicationContext()).load(uri).into(imageView);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
