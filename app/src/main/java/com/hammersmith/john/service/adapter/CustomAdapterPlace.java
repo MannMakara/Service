@@ -58,6 +58,8 @@ public class CustomAdapterPlace extends BaseAdapter {
         NetworkImageView image = (NetworkImageView) convertView.findViewById(R.id.logo);
         TextView title = (TextView) convertView.findViewById(R.id.title);
         TextView address = (TextView) convertView.findViewById(R.id.addr);
+        TextView dis = (TextView) convertView.findViewById(R.id.discount);
+
 
         Place place = placeItems.get(position);
         //set Logo
@@ -66,6 +68,11 @@ public class CustomAdapterPlace extends BaseAdapter {
         title.setText(place.getName());
         //Set Address of the Place
         address.setText(place.getAddress());
+        //Set discount
+        if (place.getDis() == 0)
+            dis.setText("N/A");
+        else
+            dis.setText(place.getDis()+"% Off");
         return convertView;
     }
 }

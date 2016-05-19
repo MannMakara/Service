@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +22,8 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.hammersmith.john.service.R;
 import com.hammersmith.john.service.adapter.RecyclerAdapter;
 import com.hammersmith.john.service.controller.AppController;
@@ -63,12 +66,16 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener {
 
     // FInish //
 
+    //AdView
+
+    private AdView adView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_1, container, false);
 //        categories.clear();
-        viewFlipper = (ViewFlipper) v.findViewById(R.id.viewFlipper);
+//        viewFlipper = (ViewFlipper) v.findViewById(R.id.viewFlipper);
         // ********** Recycler View ****************//
         recyclerView = (RecyclerView) v.findViewById(R.id.cate);
         recyclerView.setHasFixedSize(true);
@@ -109,7 +116,7 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener {
                                 cate.setName(obj.getString("category_name"));
                                 id[i] = obj.getInt("id");
                                 title[i] = obj.getString("category_name");
-                                categories.add(i,cate);
+                                categories.add(i, cate);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -124,6 +131,7 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
                     Toast.makeText(getActivity(), volleyError + "", Toast.LENGTH_SHORT).show();
+                    Log.d("Place Category", volleyError + "");
                 }
             });
             cateReq.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -134,18 +142,36 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener {
 
         // Test //
 
-        for (int aRe : re) {
-            ImageView imageView = new ImageView(getActivity());
-            imageView.setImageResource(aRe);
-            viewFlipper.addView(imageView);
-        }
-        viewFlipper.setAutoStart(true);
-        viewFlipper.setFlipInterval(3000);
-        viewFlipper.setInAnimation(getActivity(), R.anim.left_in);
-        viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
-        viewFlipper.showNext();
-        CustomGestureDetector customGestureDetector = new CustomGestureDetector();
-        mGestureDetector = new GestureDetector(getActivity(), customGestureDetector);
+//        for (int aRe : re) {
+//            ImageView imageView = new ImageView(getActivity());
+//            imageView.setImageResource(aRe);
+//            viewFlipper.addView(imageView);
+//        }
+//        viewFlipper.setAutoStart(true);
+//        viewFlipper.setFlipInterval(3000);
+//        viewFlipper.setInAnimation(getActivity(), R.anim.left_in);
+//        viewFlipper.setOutAnimation(getActivity(), R.anim.left_out);
+//        viewFlipper.showNext();
+//        CustomGestureDetector customGestureDetector = new CustomGestureDetector();
+//        mGestureDetector = new GestureDetector(getActivity(), customGestureDetector);
+        ViewBannerGallery viewBannerGallery = (ViewBannerGallery) v.findViewById(R.id.viewBannerGallery);
+        ArrayList<ViewBannerGallery.BannerItem> listData=new  ArrayList<ViewBannerGallery.BannerItem>();
+        listData.add(viewBannerGallery.new BannerItem("http://www.angkorfocus.com/userfiles/banner_phnom_penh_heart_city.jpg", "http://www.angkorfocus.com", "Phnom Penh"));
+        listData.add(viewBannerGallery.new BannerItem("http://www.angkorfocus.com/userfiles/banner_siem_reap_angkor_wat(1).jpg", "http://www.angkorfocus.com", "Angkor Wat"));
+        listData.add(viewBannerGallery.new BannerItem("http://www.angkorfocus.com/userfiles/banner_beach-break-sihanoukville.jpg", "http://www.angkorfocus.com", "Sihanoukville"));
+        listData.add(viewBannerGallery.new BannerItem("http://www.angkorfocus.com/userfiles/banner_kep_city.jpg", "http://www.angkorfocus.com", "Kep"));
+        viewBannerGallery.flip(listData, true);
+
+
+        // Admob Advertise
+        adView = (AdView) v.findViewById(R.id.adViewBanner);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("45E04C461D1C789565E42D371E40600A")
+                .build();
+        adView.loadAd(adRequest);
+
+
         return v;
 
     }
@@ -178,6 +204,7 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener {
             return super.onFling(e1, e2, velocityX, velocityY);
         }
     }
+
     public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         private int space;
 
@@ -215,5 +242,26 @@ public class Tab1 extends Fragment implements RecyclerAdapter.ClickListener {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void onPause() {
+        if (adView !=null)
+            adView.pause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adView !=null)
+            adView.resume();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (adView !=null)
+            adView.destroy();
+        super.onDestroy();
     }
 }

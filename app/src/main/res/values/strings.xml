@@ -33,7 +33,8 @@
     <string name="work">Work</string>
 
     <!--AdMob Ads Unit ID-->
-    <string name="banner_bottom_home">ca-app-pub-9141191178824804/4612196978</string>
     <string name="interstitial_full_screen">ca-app-pub-9141191178824804/6088930178</string>
+    <string name="banner_bottom_tab">ca-app-pub-4867478344767499/7183628764</string>
+    <string name="interstitial_full">ca-app-pub-4867478344767499/1137095164</string>
 
 </resources>

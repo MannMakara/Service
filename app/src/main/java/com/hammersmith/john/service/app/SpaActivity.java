@@ -76,7 +76,7 @@ public class SpaActivity extends AppCompatActivity {
             JsonArrayRequest cityReq = new JsonArrayRequest(Constant.URL_CITY, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray jsonArray) {
-                    hideProgress();
+
                     id = new int[jsonArray.length()];
                     title = new String[jsonArray.length()];
                     for (int i=0; i< jsonArray.length() ; i++) {
@@ -88,6 +88,7 @@ public class SpaActivity extends AppCompatActivity {
                             id[i] = obj.getInt("id");
                             title[i] = obj.getString("city_name");
                             cityList.add(city);
+                            hideProgress();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

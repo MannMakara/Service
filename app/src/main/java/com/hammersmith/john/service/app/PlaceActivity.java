@@ -60,7 +60,7 @@ public class PlaceActivity extends AppCompatActivity {
         //**************** AdMob Ads Full Screen******************//
         interstitialAd = new InterstitialAd(this);
         // set the ad unit ID
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen));
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_full));
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("45E04C461D1C789565E42D371E40600A")
@@ -99,7 +99,7 @@ public class PlaceActivity extends AppCompatActivity {
             JsonArrayRequest placeReq = new JsonArrayRequest(Constant.URL_PLACE + place_url, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray jsonArray) {
-                    hideProgress();
+
                     place_id = new String[jsonArray.length()];
                     place_title = new String[jsonArray.length()];
 //                    Toast.makeText(getApplicationContext(),"Json Request "+jsonArray.length(),Toast.LENGTH_SHORT).show();
@@ -110,6 +110,7 @@ public class PlaceActivity extends AppCompatActivity {
                             place = new Place();
                             place.setName(object.getString("customer_name"));
                             place.setAddress(object.getString("address"));
+                            place.setDis(object.getInt("dis"));
                             place.setImage(Constant.URL_INDEX + object.getString("logo_path"));
                             place_id[i] = object.getString("id");
                             place_title[i] = object.getString("customer_name");
@@ -119,6 +120,7 @@ public class PlaceActivity extends AppCompatActivity {
                         }
                     }
                     adapterPlace.notifyDataSetChanged();
+                    hideProgress();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -145,7 +147,6 @@ public class PlaceActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Loading...");
-            progressDialog.setCancelable(false);
         }
 
         progressDialog.show();

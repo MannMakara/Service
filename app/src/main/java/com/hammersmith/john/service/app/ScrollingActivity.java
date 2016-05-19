@@ -1,5 +1,6 @@
 package com.hammersmith.john.service.app;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
@@ -43,6 +44,8 @@ import utils.Constant;
 public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     String detail_place_title;
+
+    ProgressDialog progressDialog;
 
     public static int placeID;
     public static Place place;
@@ -230,5 +233,20 @@ public class ScrollingActivity extends AppCompatActivity implements OnMapReadyCa
         mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(11.570937,104.937177)));
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(11.570937,104.937177),16f);
         mGoogleMap.moveCamera(cameraUpdate);
+    }
+
+    private void showProgress() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getApplicationContext());
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading...");
+        }
+        progressDialog.show();
+    }
+
+    private void hideProgress() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 }

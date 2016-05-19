@@ -13,6 +13,7 @@ public class Place {
     private String phone;
     private String email;
     private String web;
+    private int dis;
 
     public Place(int id, String name, String img, String address){
         this.setId(id);
@@ -94,5 +95,13 @@ public class Place {
 
     public void setWeb(String web) {
         this.web = web;
+    }
+
+    public int getDis() {
+        return dis;
+    }
+
+    public void setDis(int dis) {
+        this.dis = dis;
     }
 }
